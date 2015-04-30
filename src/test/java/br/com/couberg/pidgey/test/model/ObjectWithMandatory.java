@@ -1,10 +1,10 @@
 package br.com.couberg.pidgey.test.model;
 
-import br.com.couberg.pidgey.annotation.Id;
+import br.com.couberg.pidgey.annotation.Mandatory;
 import br.com.couberg.pidgey.annotation.PField;
 import br.com.couberg.pidgey.enumeration.FillDirectionEnum;
 
-public class ObjectWithId {
+public class ObjectWithMandatory {
 	
 	@PField(position = 1720, size = 4, fillValue = '0', fill = FillDirectionEnum.LEFT)
 	private String idPerfil;
@@ -12,7 +12,7 @@ public class ObjectWithId {
 	@PField(position = 1724, size = 255)
 	private String descricao;
 	
-	@Id(nullValue = ' ')
+	@Mandatory()
 	@PField(position = 1979, size = 255)
 	private String nome;
 	

@@ -20,6 +20,7 @@ public @interface PField {
 	Class<?> clazz() default String.class;
 	FillDirectionEnum fill() default FillDirectionEnum.RIGHT;
 	char fillValue() default ' ';
+	char nullFillValue() default ' ';
 	int size() default 0;
 	int position() default -1;
 }

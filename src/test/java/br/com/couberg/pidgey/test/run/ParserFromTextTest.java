@@ -11,7 +11,7 @@ import br.com.couberg.pidgey.parser.Parser;
 import br.com.couberg.pidgey.test.mock.Mocker;
 import br.com.couberg.pidgey.test.model.ObjectWithListWithoutMany2;
 import br.com.couberg.pidgey.test.model.ObjectWithManyWithoutRepeated;
-import br.com.couberg.pidgey.test.model.ObjectWithStringAndListOfObjectsWithId;
+import br.com.couberg.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
 import br.com.couberg.pidgey.test.model.ObjectWithUnaccessibleClass;
 import br.com.couberg.pidgey.test.model.ObjectWithoutDefaultConstructor;
 import br.com.couberg.pidgey.test.model.ObjectWithoutId;
@@ -31,7 +31,7 @@ public class ParserFromTextTest {
 		ObjectWithoutId objectWithoutId = 
 				parser.fromText(ObjectWithoutId.class, response);
 		ObjectWithoutId check = Mocker.getObjectWithoutId();
-		assertEquals(objectWithoutId.getNomePerfil(), check.getNomePerfil());
+		assertEquals(check.getNomePerfil(), objectWithoutId.getNomePerfil());
 	}
 	
 	@Test
@@ -40,173 +40,172 @@ public class ParserFromTextTest {
 		ObjectWithoutId objectWithoutId = 
 				parser.fromText(ObjectWithoutId.class, response);
 		ObjectWithoutId check = Mocker.getObjectWithoutId();
-		assertEquals(objectWithoutId.getIdSistema(), check.getIdSistema());
+		assertEquals(check.getIdSistema(), objectWithoutId.getIdSistema());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getQuantidade(),check.getQuantidade());
+		assertEquals(check.getQuantidade(), response.getQuantidade());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId2() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(0).getDescricao(),
-				check.getRoles().get(0).getDescricao());
+		assertEquals(check.getRoles().get(0).getDescricao(), 
+				response.getRoles().get(0).getDescricao());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId3() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(0).getIdPerfil(),
-				check.getRoles().get(0).getIdPerfil());
+		assertEquals(check.getRoles().get(0).getIdPerfil(), 
+				response.getRoles().get(0).getIdPerfil());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId4() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(0).getIdSistema(),
-				check.getRoles().get(0).getIdSistema());
+		assertEquals(check.getRoles().get(0).getIdSistema(), 
+				response.getRoles().get(0).getIdSistema());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId5() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(0).getNome(),
-				check.getRoles().get(0).getNome());
+		assertEquals(check.getRoles().get(0).getNome(), 
+				response.getRoles().get(0).getNome());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId6() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(0).getNomeSistema(),
-				check.getRoles().get(0).getNomeSistema());
+		assertEquals(check.getRoles().get(0).getNomeSistema(), 
+				response.getRoles().get(0).getNomeSistema());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId7() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(2).getDescricao(),
-				check.getRoles().get(2).getDescricao());
+		assertEquals(check.getRoles().get(2).getDescricao(), response.getRoles().get(2).getDescricao());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId8() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(2).getIdPerfil(),
-				check.getRoles().get(2).getIdPerfil());
+		assertEquals(check.getRoles().get(2).getIdPerfil(), 
+				response.getRoles().get(2).getIdPerfil());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId9() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(2).getIdSistema(),
-				check.getRoles().get(2).getIdSistema());
+		assertEquals(check.getRoles().get(2).getIdSistema(), 
+				response.getRoles().get(2).getIdSistema());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId10() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(2).getNome(),
-				check.getRoles().get(2).getNome());
+		assertEquals(check.getRoles().get(2).getNome(), 
+				response.getRoles().get(2).getNome());
 	}
 	
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId11() 
 			throws ParseException {
 		String responseStr = Mocker.
-				getStringObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId check = 
-				Mocker.getObjectObjectWithStringAndListOfObjectsWithId();
-		ObjectWithStringAndListOfObjectsWithId response = 
-				parser.fromText(ObjectWithStringAndListOfObjectsWithId.class, 
+				getStringObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory check = 
+				Mocker.getObjectObjectWithStringAndListOfObjectsWithMandatory();
+		ObjectWithStringAndListOfObjectsWithMandatory response = 
+				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(response.getRoles().get(2).getNomeSistema(),
-				check.getRoles().get(2).getNomeSistema());
+		assertEquals(check.getRoles().get(2).getNomeSistema(), 
+				response.getRoles().get(2).getNomeSistema());
 	}
 	
 	@Test(expected = ParseException.class)
 	public void testFromTextListWithoutMany() throws ParseException {
 		String responseStr = 
-				Mocker.getStringObjectWithStringAndListOfObjectsWithId();
+				Mocker.getStringObjectWithStringAndListOfObjectsWithMandatory();
 		parser.fromText(ObjectWithListWithoutMany2.class, responseStr);
 	}
 	
 	@Test(expected = ParseException.class)
 	public void testFromTextManyWithoutRepeated() throws ParseException {
 		String responseStr = 
-				Mocker.getStringObjectWithStringAndListOfObjectsWithId();
+				Mocker.getStringObjectWithStringAndListOfObjectsWithMandatory();
 		parser.fromText(ObjectWithManyWithoutRepeated.class, responseStr);
 	}
 	

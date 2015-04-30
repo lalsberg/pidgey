@@ -11,8 +11,8 @@ public class ObjectWithManyWithoutRepeated {
 	private String quantidade;
 	
 	@Many()
-	@PField(size = 773, clazz = ObjectWithId.class)
-	private List<ObjectWithId> roles;
+	@PField(size = 773, clazz = ObjectWithMandatory.class)
+	private List<ObjectWithMandatory> roles;
 
 	public String getQuantidade() {
 		return quantidade;
@@ -22,11 +22,11 @@ public class ObjectWithManyWithoutRepeated {
 		this.quantidade = quantidade;
 	}
 
-	public List<ObjectWithId> getRoles() {
+	public List<ObjectWithMandatory> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<ObjectWithId> role) {
+	public void setRoles(List<ObjectWithMandatory> role) {
 		this.roles = role;
 	}
 

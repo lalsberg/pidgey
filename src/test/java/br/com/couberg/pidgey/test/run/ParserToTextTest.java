@@ -11,7 +11,7 @@ import br.com.couberg.pidgey.parser.Parser;
 import br.com.couberg.pidgey.test.mock.Mocker;
 import br.com.couberg.pidgey.test.model.ObjectWithListWithoutMany;
 import br.com.couberg.pidgey.test.model.ObjectWithManyWithoutRepeated;
-import br.com.couberg.pidgey.test.model.ObjectWithStringAndListOfObjectsWithId;
+import br.com.couberg.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
 import br.com.couberg.pidgey.test.model.ObjectWithoutDefaultConstructor;
 import br.com.couberg.pidgey.test.model.ObjectWithoutId;
 
@@ -29,17 +29,18 @@ public class ParserToTextTest {
 			throws ParseException {
 		ObjectWithoutId request = Mocker.getObjectWithoutId();
 		String requestStr = parser.toText(request);
-		assertEquals(requestStr, Mocker.getStringObjectWithoutId());
+		String check = Mocker.getStringObjectWithoutId();
+		assertEquals(check, requestStr);
 	}
 	
 	@Test
 	public void testToTextObjectWithStringAndListOfObjectsWithId() 
 			throws ParseException {
-		ObjectWithStringAndListOfObjectsWithId request = Mocker.
-				getObjectObjectWithStringAndListOfObjectsWithId();
+		ObjectWithStringAndListOfObjectsWithMandatory request = Mocker.
+				getObjectObjectWithStringAndListOfObjectsWithMandatory();
 		String requestStr = parser.toText(request);
-		String check = Mocker.getStringObjectWithStringAndListOfObjectsWithId();
-		assertEquals(requestStr, check);
+		String check = Mocker.getStringObjectWithStringAndListOfObjectsWithMandatory();
+		assertEquals(check, requestStr);
 	}
 	
 	@Test(expected = ParseException.class)

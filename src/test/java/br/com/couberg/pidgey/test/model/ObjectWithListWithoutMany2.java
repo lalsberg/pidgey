@@ -9,8 +9,8 @@ public class ObjectWithListWithoutMany2 {
 	@PField(position = 1716, size = 4)
 	private String quantidade;
 	
-	@PField(size = 773, clazz = ObjectWithId.class)
-	private List<ObjectWithId> objectsWithId;
+	@PField(size = 773, clazz = ObjectWithMandatory.class)
+	private List<ObjectWithMandatory> objectsWithId;
 
 	public String getQuantidade() {
 		return quantidade;
@@ -20,11 +20,11 @@ public class ObjectWithListWithoutMany2 {
 		this.quantidade = quantidade;
 	}
 
-	public List<ObjectWithId> getObjectsWithId() {
+	public List<ObjectWithMandatory> getObjectsWithId() {
 		return objectsWithId;
 	}
 
-	public void setRoles(List<ObjectWithId> objectsWithId) {
+	public void setRoles(List<ObjectWithMandatory> objectsWithId) {
 		this.objectsWithId = objectsWithId;
 	}
 

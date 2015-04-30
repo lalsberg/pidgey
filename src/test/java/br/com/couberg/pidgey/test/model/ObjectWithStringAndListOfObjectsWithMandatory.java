@@ -5,14 +5,14 @@ import java.util.List;
 import br.com.couberg.pidgey.annotation.Many;
 import br.com.couberg.pidgey.annotation.PField;
 
-public class ObjectWithStringAndListOfObjectsWithId {
+public class ObjectWithStringAndListOfObjectsWithMandatory {
 	
 	@PField(position = 1716, size = 4)
 	private String string1;
 	
 	@Many(repeated = 3)
-	@PField(size = 773, clazz = ObjectWithId.class)
-	private List<ObjectWithId> roles;
+	@PField(size = 773, clazz = ObjectWithMandatory.class)
+	private List<ObjectWithMandatory> roles;
 
 	public String getQuantidade() {
 		return string1;
@@ -22,11 +22,11 @@ public class ObjectWithStringAndListOfObjectsWithId {
 		this.string1 = quantidade;
 	}
 
-	public List<ObjectWithId> getRoles() {
+	public List<ObjectWithMandatory> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<ObjectWithId> role) {
+	public void setRoles(List<ObjectWithMandatory> role) {
 		this.roles = role;
 	}
 

@@ -8,16 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.com.couberg.pidgey.annotation.Id;
+import br.com.couberg.pidgey.annotation.Mandatory;
 import br.com.couberg.pidgey.annotation.Many;
 import br.com.couberg.pidgey.annotation.PField;
 import br.com.couberg.pidgey.enumeration.FillDirectionEnum;
 import br.com.couberg.pidgey.exception.ParseException;
 
 /**
- * Represents a Book. This class must be extended in order to  
- * implement a book that can be converted to a formatted String 
- * that can be sent to the mainframe. 
+ * The parser to convert between String and Object
  * 
  * @author Coutinho
  * @author lalsberg
@@ -27,7 +25,9 @@ public class Parser implements IParser {
 	private static Logger logger = LoggerFactory.getLogger(Parser.class);
 	
 	/**
-	 * Uses the String to set this object values
+	 * Uses the String to create an object of the 
+	 * given class.
+	 * @param clazz
 	 * @param text
 	 */
 	public <T> T fromText(Class<T> clazz, String text) 
@@ -52,8 +52,8 @@ public class Parser implements IParser {
 	}
 	
 	/**
-	 * Uses the object to create the String
-	 * @return {@link String} that can be sent to the mainframe
+	 * Parse the instance into an String
+	 * @return {@link String} the parsed String
 	 */
 	public String toText(Object instance) throws ParseException{
 		StringBuilder sb = new StringBuilder();
@@ -75,9 +75,9 @@ public class Parser implements IParser {
 			createByClass(superClass, sb, instance, listSizeSum);
 		}
 		
-		List<Field> fields = getBookfieldFields(clazz);
+		List<Field> fields = getPFieldFields(clazz);
 		for(Field field : fields) {
-			PField bookfield = field.getAnnotation(PField.class);
+			PField pField = field.getAnnotation(PField.class);
 			
 			field.setAccessible(true);
 			Object value;
@@ -93,11 +93,11 @@ public class Parser implements IParser {
 			}
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(bookfield.clazz() == String.class) {
-					int position = bookfield.position() + listSizeSum;
-					insertString(sb, bookfield, value, position);
+				if(pField.clazz() == String.class) {
+					int position = pField.position() + listSizeSum;
+					insertString(sb, pField, value, position);
 				} else {
-					createByClass(bookfield.clazz(), sb, value, 
+					createByClass(pField.clazz(), sb, value, 
 							listSizeSum);
 				}
 			} else {
@@ -120,22 +120,22 @@ public class Parser implements IParser {
 					listLimit = values.size();
 				}
 				
-				if(bookfield.clazz() == String.class) {
+				if(pField.clazz() == String.class) {
 					for(int i=0; i<listLimit; i++) {
-						int position = bookfield.position() + 
-								(bookfield.size() * i) + listSizeSum;
+						int position = pField.position() + 
+								(pField.size() * i) + listSizeSum;
 						Object value2 = (values == null || i >= values.size()) 
 								? null : values.get(i);
-						insertString(sb, bookfield, value2, position);
+						insertString(sb, pField, value2, position);
 					}
-					return bookfield.size() * listLimit;
+					return pField.size() * listLimit;
 				} else {
 					for(int i=0; i<listLimit; i++) {
 						Object value2 = (values == null || i >= values.size()) 
 								? null : values.get(i);
 						int innerListSizeSum = listSizeSum + 
-								(bookfield.size() * i);
-						createByClass(bookfield.clazz(), sb, value2, 
+								(pField.size() * i);
+						createByClass(pField.clazz(), sb, value2, 
 								innerListSizeSum);
 					}
 				}
@@ -146,29 +146,16 @@ public class Parser implements IParser {
 	
 	/**
 	 * @param sb
-	 * @param bookfield
+	 * @param pField
 	 * @param value
 	 * @param position
 	 * 
-	 * Overloaded method. Realizes the same, but specifying the 
-	 * position to insert the value. Used in lists, where the 
-	 * position of each element is dynamic, not the position 
-	 * specified in the Bookfield annotation.
+	 * Insert the String in the given position. 
 	 */
 	private void insertString(StringBuilder sb,
-			PField bookfield, Object value, int position) {
+			PField pField, Object value, int position) {
 		
-		value = value != null ? value : "";
-
-		if(bookfield.fill() == FillDirectionEnum.LEFT) {
-			value = StringUtils.leftPad((String) value, bookfield.size(), 
-					bookfield.fillValue());
-		} else if(bookfield.fill() == FillDirectionEnum.RIGHT) {
-			value = StringUtils.rightPad((String) value, bookfield.size(), 
-					bookfield.fillValue());
-		}
-		
-		value = ((String) value).substring(0, bookfield.size());
+		value = formatValue(pField, value);
 		
 		if(position >= sb.length()) {
 			while (position > sb.length()) {
@@ -176,8 +163,35 @@ public class Parser implements IParser {
 			}
 			sb.append(value);
 		} else {
-			sb.replace(position, position + bookfield.size(), (String)value);
+			sb.replace(position, position + pField.size(), (String)value);
 		}
+	}
+
+	/**
+	 * Format the value using fillValue (or nullFillValue if it is null),  
+	 * fillDirection and size.
+	 * @param pField
+	 * @param value
+	 * @return
+	 */
+	private Object formatValue(PField pField, Object value) {
+		char actualFillValue = pField.fillValue();
+		if (value == null) {
+			actualFillValue = pField.nullFillValue();
+		}
+		
+		value = value != null ? value : "";
+
+		if(pField.fill() == FillDirectionEnum.LEFT) {
+			value = StringUtils.leftPad((String) value, pField.size(), 
+					actualFillValue);
+		} else if(pField.fill() == FillDirectionEnum.RIGHT) {
+			value = StringUtils.rightPad((String) value, pField.size(), 
+					actualFillValue);
+		}
+		
+		value = ((String) value).substring(0, pField.size());
+		return value;
 	}
 	
 	/**
@@ -195,26 +209,27 @@ public class Parser implements IParser {
 			createByText(superClass, text, obj, listSizeSum);
 		}
 		
-		List<Field> fields = getBookfieldFields(clazz);
+		List<Field> fields = getPFieldFields(clazz);
 		for(Field field : fields) {
-			PField bookfield = field.getAnnotation(PField.class);
-			int size = bookfield.size();
+			PField pField = field.getAnnotation(PField.class);
+			int size = pField.size();
 			String value = "";
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(bookfield.clazz() == String.class) {
-					int position = bookfield.position() + listSizeSum;
+				if(pField.clazz() == String.class) {
+					int position = pField.position() + listSizeSum;
 					boolean endOfNode = isEndOfNode(field, text, position);
 					if(endOfNode) {
 						return endOfNode;
 					}
-//					value = text.substring(position, position + size).trim();
 					value = text.substring(position, position + size);
-					if(bookfield.fill() == FillDirectionEnum.LEFT) {
-						value = StringUtils.stripStart(value, String.valueOf(bookfield.fillValue()));
+					if(pField.fill() == FillDirectionEnum.LEFT) {
+						value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
 					} else {
-						value = StringUtils.stripEnd(value, String.valueOf(bookfield.fillValue()));
+						value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
 					}
+					boolean isNull = StringUtils.containsOnly(value, pField.nullFillValue());
+					value = isNull ? null : value;
 					field.setAccessible(true);
 					try {
 						field.set(obj, value);
@@ -224,8 +239,8 @@ public class Parser implements IParser {
 					}
 				} else {
 					try {
-						Object instance = bookfield.clazz().newInstance();
-						createByText(bookfield.clazz(), text, instance, listSizeSum);
+						Object instance = pField.clazz().newInstance();
+						createByText(pField.clazz(), text, instance, listSizeSum);
 						field.setAccessible(true);
 						try {
 							field.set(obj, instance);
@@ -234,13 +249,13 @@ public class Parser implements IParser {
 							throw new ParseException(e.getMessage());
 						}
 					} catch(InstantiationException e) {
-						String message = "The class " + bookfield.clazz() + 
+						String message = "The class " + pField.clazz() + 
 								" must provide a default constructor in order to be "
 								+ "created by using reflection.";
 						logger.error(message, e);
 						throw new ParseException(message);
 					} catch(IllegalAccessException e) {
-						String message = "Could not access the class " + bookfield.clazz() + 
+						String message = "Could not access the class " + pField.clazz() + 
 								". Are you sure the class and/or the constructor is "
 								+ "accessible?";
 						logger.error(message);
@@ -251,51 +266,40 @@ public class Parser implements IParser {
 				field.setAccessible(true);
 				List<Object> lista = new ArrayList<Object>();
 				Many many = field.getAnnotation(Many.class);
-				if(many == null) {
-					String message = "The collection " + field.getName() + 
-							" must be annotated with Many.";
-					logger.error(message);
-					throw new ParseException(message);
-				} else if(many.repeated() == -1) {
-					String message = "The Many annotation in the collection " + 
-				field.getName() + " must specify the attribute repeated.";
-					logger.error(message);
-					throw new ParseException(message);
-				}
+				validateMany(field, many);
 				for(int i = 0; i < many.repeated(); i++) {
-					if(bookfield.clazz() == String.class) {
-						int position = bookfield.position() + 
-								(bookfield.size() * i) + listSizeSum;
-						boolean endOfNode = isEndOfNode(field, text, position);
+					if(pField.clazz() == String.class) {
+						int position = pField.position() + 
+								(pField.size() * i) + listSizeSum;
+						boolean endOfNode = isEndOfNodeStringList(field, text, position);
 						if(endOfNode) {
 							break;
 						}
-//						value = text.substring(position, position + size).trim();
 						value = text.substring(position, position + size);
-						if(bookfield.fill() == FillDirectionEnum.LEFT) {
-							value = StringUtils.stripStart(value, String.valueOf(bookfield.fillValue()));
+						if(pField.fill() == FillDirectionEnum.LEFT) {
+							value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
 						} else {
-							value = StringUtils.stripEnd(value, String.valueOf(bookfield.fillValue()));
+							value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
 						}
 						lista.add(value);
 					} else {
 						try {
-							Object instance = bookfield.clazz().newInstance();
-							int innerListSizeSum = listSizeSum + (bookfield.size() * i);
-							boolean endOfNode = createByText(bookfield.clazz(), 
+							Object instance = pField.clazz().newInstance();
+							int innerListSizeSum = listSizeSum + (pField.size() * i);
+							boolean endOfNode = createByText(pField.clazz(), 
 									text, instance, innerListSizeSum);
 							if(endOfNode) {
 								break;
 							}
 							lista.add(instance);
 						} catch(InstantiationException e) {
-							String message = "The class " + bookfield.clazz() + 
+							String message = "The class " + pField.clazz() + 
 									" must provide a default constructor in order to be "
 									+ "created by using reflection.";
 							logger.error(message, e);
 							throw new ParseException(message);
 						} catch(IllegalAccessException e) {
-							String message = "Could not access the class " + bookfield.clazz() + 
+							String message = "Could not access the class " + pField.clazz() + 
 									". Are you sure the class and/or the constructor is "
 									+ "accessible?";
 							logger.error(message);
@@ -314,34 +318,46 @@ public class Parser implements IParser {
 		return false;
 	}
 
-	/**
-	 * Retrieve the fields annotated with Bookfield
-	 * @param clazz
-	 * @return the fields annotated with <code>Bookfield</code> of the 
-	 * given <code>clazz</code>.
-	 */
-	private List<Field> getBookfieldFields(Class<?> clazz) {
-		Field[] declaredFields = clazz.getDeclaredFields();
-		List<Field> declaredBookfieldsFields = new ArrayList<Field>();
-		for(Field field : declaredFields) {
-			PField bookfield = field.getAnnotation(PField.class);
-			if(bookfield != null) {
-				declaredBookfieldsFields.add(field);
-			}
+	private void validateMany(Field field, Many many) throws ParseException {
+		if(many == null) {
+			String message = "The collection " + field.getName() + 
+					" must be annotated with Many.";
+			logger.error(message);
+			throw new ParseException(message);
+		} else if(many.repeated() == -1) {
+			String message = "The Many annotation in the collection " + 
+		field.getName() + " must specify the attribute repeated.";
+			logger.error(message);
+			throw new ParseException(message);
 		}
-		return declaredBookfieldsFields;
 	}
 
 	/**
-	 * Indicate if this value was not returned from the mainframe.
-	 * The returned value will be used to indicate that the list 
-	 * that involves the element should stop adding elements. 
+	 * Retrieve the fields annotated with PField
+	 * @param clazz
+	 * @return the fields annotated with <code>PField</code> of the 
+	 * given <code>clazz</code>.
+	 */
+	private List<Field> getPFieldFields(Class<?> clazz) {
+		Field[] declaredFields = clazz.getDeclaredFields();
+		List<Field> declaredPFieldFields = new ArrayList<Field>();
+		for(Field field : declaredFields) {
+			PField pField = field.getAnnotation(PField.class);
+			if(pField != null) {
+				declaredPFieldFields.add(field);
+			}
+		}
+		return declaredPFieldFields;
+	}
+
+	/**
+	 * If the text is over or have found a Mandatory field null
 	 * 
 	 * @param field
 	 * @param value
 	 * @return <code>true</code> if the value of the element is all 
-	 * composed by the specified nullValue parameter of the Id 
-	 * annotation;
+	 * composed by the specified nullfillValue parameter of the PField 
+	 * annotation, or if the text is over;
 	 * 		   <code>false</code> otherwise.
 	 */
 	private boolean isEndOfNode(Field field, String text, int position) {
@@ -354,10 +370,7 @@ public class Parser implements IParser {
 		//TODO trocar por =, e antes fazer if. se >, entao throw parseException(unexpectedEndOfString).
 		if(position + size > text.length()) {
 			endOfNode = true;
-			
-		//Check if the there is an Id not returned
 		} else {
-//			String value = text.substring(position, position + size).trim();
 			String value = text.substring(position, position + size);
 			if(pfield.fill() == FillDirectionEnum.LEFT) {
 				value = StringUtils.stripStart(value, String.valueOf(pfield.fillValue()));
@@ -365,22 +378,46 @@ public class Parser implements IParser {
 				value = StringUtils.stripEnd(value, String.valueOf(pfield.fillValue()));
 			}
 			
-			Id id = field.getAnnotation(Id.class);
+			Mandatory id = field.getAnnotation(Mandatory.class);
 			if(id != null) {
-				char mainframeFillValue = id.nullValue();
-				boolean allDefault = true;
-				for(char c : value.toCharArray()) {
-					allDefault = allDefault && (c == mainframeFillValue);
-					if(!allDefault) {
-						break;
-					}
-				}
-				if(allDefault) {
-					endOfNode = true;
-				}
+				boolean allDefault = StringUtils.containsOnly(value, pfield.nullFillValue());
+				endOfNode = allDefault;
 			}
 		}
+		return endOfNode;
+	}
+	
+	/**
+	 * The same as isEndOfNode, but instead of checking if 
+	 * is Mandatory, this methods will always return true 
+	 * when the value is all made of nullFillValue
+	 * @param field
+	 * @param text
+	 * @param position
+	 * @return
+	 */
+	private boolean isEndOfNodeStringList(Field field, String text, int position) {
+		boolean endOfNode = false;
 		
+		PField pfield = field.getAnnotation(PField.class);
+		int size = pfield.size();
+		
+		//TODO trocar por =, e antes fazer if. se >,
+		//entao throw parseException(unexpectedEndOfString).
+		//Check if the text ended
+		if(position + size > text.length()) {
+			endOfNode = true;
+		} else {
+			String value = text.substring(position, position + size);
+			if(pfield.fill() == FillDirectionEnum.LEFT) {
+				value = StringUtils.stripStart(value, String.valueOf(pfield.fillValue()));
+			} else {
+				value = StringUtils.stripEnd(value, String.valueOf(pfield.fillValue()));
+			}
+			
+			boolean allDefault = StringUtils.containsOnly(value, pfield.nullFillValue());
+			endOfNode = allDefault;
+		}
 		return endOfNode;
 	}
 
