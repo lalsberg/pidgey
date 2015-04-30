@@ -10,7 +10,8 @@ import br.com.pidgey.exception.ParseException;
 public interface IParser {
 	
 	/**
-	 * Uses the String to set this object values
+	 * Uses the String to create an object of the 
+	 * specified <code>clazz</code> type
 	 * @param text to parse
 	 */
 	<T> T fromText(Class<T> clazz, String text) throws ParseException;

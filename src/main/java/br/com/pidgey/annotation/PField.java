@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import br.com.pidgey.enumeration.FillDirectionEnum;
 
 /**
- * Determines that field will be parsed.
+ * Determines that the field will be parsed.
  * 
  * @author lalsberg
  * @author Coutinho

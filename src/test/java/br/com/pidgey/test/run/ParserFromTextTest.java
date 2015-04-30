@@ -136,7 +136,8 @@ public class ParserFromTextTest {
 		ObjectWithStringAndListOfObjectsWithMandatory response = 
 				parser.fromText(ObjectWithStringAndListOfObjectsWithMandatory.class, 
 				responseStr);
-		assertEquals(check.getRoles().get(2).getDescricao(), response.getRoles().get(2).getDescricao());
+		assertEquals(check.getRoles().get(2).getDescricao(), 
+				response.getRoles().get(2).getDescricao());
 	}
 	
 	@Test

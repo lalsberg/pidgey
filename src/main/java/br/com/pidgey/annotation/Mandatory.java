@@ -6,11 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Where to use:
- * Processed only during fromText method. 
+ * <b>Where must be used</b><br/>
+ * Processed only during fromText method.<br/>
  * Should be used only on String fields, which are directly or 
- * indirectly inside Lists.
- * How it works: 
+ * indirectly inside Lists.<br/>
+ * <b>How it works</b><br/> 
  * Used to determine if the List has ended and can stop adding 
  * elements. This evaluation will be true if that part of text 
  * being parsed to the annotated String is actually a null value.

@@ -24,12 +24,6 @@ public class Parser implements IParser {
 	
 	private static Logger logger = LoggerFactory.getLogger(Parser.class);
 	
-	/**
-	 * Uses the String to create an object of the 
-	 * given class.
-	 * @param clazz
-	 * @param text
-	 */
 	public <T> T fromText(Class<T> clazz, String text) 
 			throws ParseException {
 		try {
@@ -50,11 +44,6 @@ public class Parser implements IParser {
 			throw new ParseException(message);
 		}
 	}
-	
-	/**
-	 * Parse the instance into an String
-	 * @return {@link String} the parsed String
-	 */
 	public String toText(Object instance) throws ParseException{
 		StringBuilder sb = new StringBuilder();
 		createByClass(instance.getClass(), sb, instance, 0);
@@ -205,7 +194,6 @@ public class Parser implements IParser {
 			int listSizeSum) throws ParseException {
 		Class<?> superClass = clazz.getSuperclass();
 		if(superClass != Object.class) {
-//			createByTextNoIntervalBySize(superClass, text, this, listSizeSum);
 			createByText(superClass, text, obj, listSizeSum);
 		}
 		
@@ -366,8 +354,6 @@ public class Parser implements IParser {
 		PField pfield = field.getAnnotation(PField.class);
 		int size = pfield.size();
 		
-		//Check if the text ended
-		//TODO trocar por =, e antes fazer if. se >, entao throw parseException(unexpectedEndOfString).
 		if(position + size > text.length()) {
 			endOfNode = true;
 		} else {
@@ -402,9 +388,6 @@ public class Parser implements IParser {
 		PField pfield = field.getAnnotation(PField.class);
 		int size = pfield.size();
 		
-		//TODO trocar por =, e antes fazer if. se >,
-		//entao throw parseException(unexpectedEndOfString).
-		//Check if the text ended
 		if(position + size > text.length()) {
 			endOfNode = true;
 		} else {
