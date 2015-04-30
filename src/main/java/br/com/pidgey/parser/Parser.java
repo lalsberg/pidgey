@@ -1,0 +1,424 @@
+package br.com.pidgey.parser;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import br.com.pidgey.annotation.Mandatory;
+import br.com.pidgey.annotation.Many;
+import br.com.pidgey.annotation.PField;
+import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.exception.ParseException;
+
+/**
+ * The parser to convert between String and Object
+ * 
+ * @author Coutinho
+ * @author lalsberg
+ */
+public class Parser implements IParser {
+	
+	private static Logger logger = LoggerFactory.getLogger(Parser.class);
+	
+	/**
+	 * Uses the String to create an object of the 
+	 * given class.
+	 * @param clazz
+	 * @param text
+	 */
+	public <T> T fromText(Class<T> clazz, String text) 
+			throws ParseException {
+		try {
+			T instance = clazz.newInstance();
+			createByText(instance.getClass(), text, instance, 0);
+			return instance;
+		} catch(InstantiationException e) {
+			String message = "The class " + clazz + 
+					" must provide a default constructor in order to be "
+					+ "created by using reflection.";
+			logger.error(message, e);
+			throw new ParseException(message);
+		} catch(IllegalAccessException e) {
+			String message = "Could not access the class " + clazz + 
+					". Are you sure the class and/or the constructor is "
+					+ "accessible?";
+			logger.error(message);
+			throw new ParseException(message);
+		}
+	}
+	
+	/**
+	 * Parse the instance into an String
+	 * @return {@link String} the parsed String
+	 */
+	public String toText(Object instance) throws ParseException{
+		StringBuilder sb = new StringBuilder();
+		createByClass(instance.getClass(), sb, instance, 0);
+		return sb.toString();
+	}
+	
+	
+	/**
+	 * Converts the object to a String depending on it's class
+	 * @param clazz the class of the object
+	 * @param sb {@link StringBuilder} to create the String
+	 */
+	private int createByClass(Class<?> clazz, StringBuilder sb, 
+			Object instance, int listSizeSum) throws ParseException {
+		
+		Class<?> superClass = clazz.getSuperclass();
+		if(superClass != Object.class) {
+			createByClass(superClass, sb, instance, listSizeSum);
+		}
+		
+		List<Field> fields = getPFieldFields(clazz);
+		for(Field field : fields) {
+			PField pField = field.getAnnotation(PField.class);
+			
+			field.setAccessible(true);
+			Object value;
+			if(instance == null) {
+				value = null;
+			} else {
+				try {
+					value = field.get(instance);
+				} catch (IllegalAccessException e) {
+					throw new ParseException(e.getMessage());
+				}
+				
+			}
+			
+			if(!List.class.isAssignableFrom(field.getType())) {
+				if(pField.clazz() == String.class) {
+					int position = pField.position() + listSizeSum;
+					insertString(sb, pField, value, position);
+				} else {
+					createByClass(pField.clazz(), sb, value, 
+							listSizeSum);
+				}
+			} else {
+				
+				@SuppressWarnings("unchecked")
+				List<Object> values = (List<Object>) value;
+					
+				Many many = field.getAnnotation(Many.class);
+				if(many == null) {
+					String message = "The collection " + field.getName() + 
+							" must be annotated with Many.";
+					logger.error(message);
+					throw new ParseException(message);
+				}
+				
+				int listLimit;
+				if(many.repeated() != -1) {
+					listLimit = many.repeated();
+				} else {
+					listLimit = values.size();
+				}
+				
+				if(pField.clazz() == String.class) {
+					for(int i=0; i<listLimit; i++) {
+						int position = pField.position() + 
+								(pField.size() * i) + listSizeSum;
+						Object value2 = (values == null || i >= values.size()) 
+								? null : values.get(i);
+						insertString(sb, pField, value2, position);
+					}
+					return pField.size() * listLimit;
+				} else {
+					for(int i=0; i<listLimit; i++) {
+						Object value2 = (values == null || i >= values.size()) 
+								? null : values.get(i);
+						int innerListSizeSum = listSizeSum + 
+								(pField.size() * i);
+						createByClass(pField.clazz(), sb, value2, 
+								innerListSizeSum);
+					}
+				}
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * @param sb
+	 * @param pField
+	 * @param value
+	 * @param position
+	 * 
+	 * Insert the String in the given position. 
+	 */
+	private void insertString(StringBuilder sb,
+			PField pField, Object value, int position) {
+		
+		value = formatValue(pField, value);
+		
+		if(position >= sb.length()) {
+			while (position > sb.length()) {
+				sb.append(" ");
+			}
+			sb.append(value);
+		} else {
+			sb.replace(position, position + pField.size(), (String)value);
+		}
+	}
+
+	/**
+	 * Format the value using fillValue (or nullFillValue if it is null),  
+	 * fillDirection and size.
+	 * @param pField
+	 * @param value
+	 * @return
+	 */
+	private Object formatValue(PField pField, Object value) {
+		char actualFillValue = pField.fillValue();
+		if (value == null) {
+			actualFillValue = pField.nullFillValue();
+		}
+		
+		value = value != null ? value : "";
+
+		if(pField.fill() == FillDirectionEnum.LEFT) {
+			value = StringUtils.leftPad((String) value, pField.size(), 
+					actualFillValue);
+		} else if(pField.fill() == FillDirectionEnum.RIGHT) {
+			value = StringUtils.rightPad((String) value, pField.size(), 
+					actualFillValue);
+		}
+		
+		value = ((String) value).substring(0, pField.size());
+		return value;
+	}
+	
+	/**
+	 * Converts part of the text into an object
+	 * @param clazz class of the object
+	 * @param text the text to be converted
+	 * @param obj object to be created
+	 * @return {@link String} the remainder part of the text
+	 */
+	private boolean createByText(Class<?> clazz, String text, Object obj, 
+			int listSizeSum) throws ParseException {
+		Class<?> superClass = clazz.getSuperclass();
+		if(superClass != Object.class) {
+//			createByTextNoIntervalBySize(superClass, text, this, listSizeSum);
+			createByText(superClass, text, obj, listSizeSum);
+		}
+		
+		List<Field> fields = getPFieldFields(clazz);
+		for(Field field : fields) {
+			PField pField = field.getAnnotation(PField.class);
+			int size = pField.size();
+			String value = "";
+			
+			if(!List.class.isAssignableFrom(field.getType())) {
+				if(pField.clazz() == String.class) {
+					int position = pField.position() + listSizeSum;
+					boolean endOfNode = isEndOfNode(field, text, position);
+					if(endOfNode) {
+						return endOfNode;
+					}
+					value = text.substring(position, position + size);
+					if(pField.fill() == FillDirectionEnum.LEFT) {
+						value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
+					} else {
+						value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
+					}
+					boolean isNull = StringUtils.containsOnly(value, pField.nullFillValue());
+					value = isNull ? null : value;
+					field.setAccessible(true);
+					try {
+						field.set(obj, value);
+					} catch (IllegalAccessException e) {
+						logger.error("Could not access field " + field.getName());
+						throw new ParseException(e.getMessage());
+					}
+				} else {
+					try {
+						Object instance = pField.clazz().newInstance();
+						createByText(pField.clazz(), text, instance, listSizeSum);
+						field.setAccessible(true);
+						try {
+							field.set(obj, instance);
+						} catch (IllegalAccessException e) {
+							logger.error("Could not access field " + field.getName());
+							throw new ParseException(e.getMessage());
+						}
+					} catch(InstantiationException e) {
+						String message = "The class " + pField.clazz() + 
+								" must provide a default constructor in order to be "
+								+ "created by using reflection.";
+						logger.error(message, e);
+						throw new ParseException(message);
+					} catch(IllegalAccessException e) {
+						String message = "Could not access the class " + pField.clazz() + 
+								". Are you sure the class and/or the constructor is "
+								+ "accessible?";
+						logger.error(message);
+						throw new ParseException(message);
+					}
+				}
+			} else {
+				field.setAccessible(true);
+				List<Object> lista = new ArrayList<Object>();
+				Many many = field.getAnnotation(Many.class);
+				validateMany(field, many);
+				for(int i = 0; i < many.repeated(); i++) {
+					if(pField.clazz() == String.class) {
+						int position = pField.position() + 
+								(pField.size() * i) + listSizeSum;
+						boolean endOfNode = isEndOfNodeStringList(field, text, position);
+						if(endOfNode) {
+							break;
+						}
+						value = text.substring(position, position + size);
+						if(pField.fill() == FillDirectionEnum.LEFT) {
+							value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
+						} else {
+							value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
+						}
+						lista.add(value);
+					} else {
+						try {
+							Object instance = pField.clazz().newInstance();
+							int innerListSizeSum = listSizeSum + (pField.size() * i);
+							boolean endOfNode = createByText(pField.clazz(), 
+									text, instance, innerListSizeSum);
+							if(endOfNode) {
+								break;
+							}
+							lista.add(instance);
+						} catch(InstantiationException e) {
+							String message = "The class " + pField.clazz() + 
+									" must provide a default constructor in order to be "
+									+ "created by using reflection.";
+							logger.error(message, e);
+							throw new ParseException(message);
+						} catch(IllegalAccessException e) {
+							String message = "Could not access the class " + pField.clazz() + 
+									". Are you sure the class and/or the constructor is "
+									+ "accessible?";
+							logger.error(message);
+							throw new ParseException(message);
+						}
+					}
+				}
+				try {
+					field.set(obj, lista);
+				} catch (IllegalAccessException e) {
+					logger.error("Could not access field " + field.getName());
+					throw new ParseException(e.getMessage());
+				}
+			}
+		}
+		return false;
+	}
+
+	private void validateMany(Field field, Many many) throws ParseException {
+		if(many == null) {
+			String message = "The collection " + field.getName() + 
+					" must be annotated with Many.";
+			logger.error(message);
+			throw new ParseException(message);
+		} else if(many.repeated() == -1) {
+			String message = "The Many annotation in the collection " + 
+		field.getName() + " must specify the attribute repeated.";
+			logger.error(message);
+			throw new ParseException(message);
+		}
+	}
+
+	/**
+	 * Retrieve the fields annotated with PField
+	 * @param clazz
+	 * @return the fields annotated with <code>PField</code> of the 
+	 * given <code>clazz</code>.
+	 */
+	private List<Field> getPFieldFields(Class<?> clazz) {
+		Field[] declaredFields = clazz.getDeclaredFields();
+		List<Field> declaredPFieldFields = new ArrayList<Field>();
+		for(Field field : declaredFields) {
+			PField pField = field.getAnnotation(PField.class);
+			if(pField != null) {
+				declaredPFieldFields.add(field);
+			}
+		}
+		return declaredPFieldFields;
+	}
+
+	/**
+	 * If the text is over or have found a Mandatory field null
+	 * 
+	 * @param field
+	 * @param value
+	 * @return <code>true</code> if the value of the element is all 
+	 * composed by the specified nullfillValue parameter of the PField 
+	 * annotation, or if the text is over;
+	 * 		   <code>false</code> otherwise.
+	 */
+	private boolean isEndOfNode(Field field, String text, int position) {
+		boolean endOfNode = false;
+		
+		PField pfield = field.getAnnotation(PField.class);
+		int size = pfield.size();
+		
+		//Check if the text ended
+		//TODO trocar por =, e antes fazer if. se >, entao throw parseException(unexpectedEndOfString).
+		if(position + size > text.length()) {
+			endOfNode = true;
+		} else {
+			String value = text.substring(position, position + size);
+			if(pfield.fill() == FillDirectionEnum.LEFT) {
+				value = StringUtils.stripStart(value, String.valueOf(pfield.fillValue()));
+			} else {
+				value = StringUtils.stripEnd(value, String.valueOf(pfield.fillValue()));
+			}
+			
+			Mandatory id = field.getAnnotation(Mandatory.class);
+			if(id != null) {
+				boolean allDefault = StringUtils.containsOnly(value, pfield.nullFillValue());
+				endOfNode = allDefault;
+			}
+		}
+		return endOfNode;
+	}
+	
+	/**
+	 * The same as isEndOfNode, but instead of checking if 
+	 * is Mandatory, this methods will always return true 
+	 * when the value is all made of nullFillValue
+	 * @param field
+	 * @param text
+	 * @param position
+	 * @return
+	 */
+	private boolean isEndOfNodeStringList(Field field, String text, int position) {
+		boolean endOfNode = false;
+		
+		PField pfield = field.getAnnotation(PField.class);
+		int size = pfield.size();
+		
+		//TODO trocar por =, e antes fazer if. se >,
+		//entao throw parseException(unexpectedEndOfString).
+		//Check if the text ended
+		if(position + size > text.length()) {
+			endOfNode = true;
+		} else {
+			String value = text.substring(position, position + size);
+			if(pfield.fill() == FillDirectionEnum.LEFT) {
+				value = StringUtils.stripStart(value, String.valueOf(pfield.fillValue()));
+			} else {
+				value = StringUtils.stripEnd(value, String.valueOf(pfield.fillValue()));
+			}
+			
+			boolean allDefault = StringUtils.containsOnly(value, pfield.nullFillValue());
+			endOfNode = allDefault;
+		}
+		return endOfNode;
+	}
+
+}
