@@ -1,5 +1,5 @@
 # pidgey
-Pidgey is an annotation-based parser between Objects and Strings.
+Pidgey is a Java annotation-based parser between Objects and Strings.
 Pidgey uses specified positions to insert the value of the field in the String.
 
 For example:
