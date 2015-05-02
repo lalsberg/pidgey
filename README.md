@@ -4,7 +4,7 @@ Pidgey uses specified positions to insert the value of the field in the String.
 
 For example:
 
-When parsing the class 
+Parsing the class 
 ```
 public class HelloWorld {
   @PField(position=0)
