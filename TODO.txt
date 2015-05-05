@@ -31,3 +31,9 @@
 	um DateProcessor, ou talvez um NumberProcessor, StringProcessor... assim temos o tratamento em várias classes ao invés de 
 	vários if's.
 	
+3 - Pensar sobre alteração no ParseException
+	Talvez seja melhor permitir que a ParseException tenha um construtor a mais que receba um Throwable para aninhar a 
+	exception original que a causou. Atualmente se ocorre um ClassCastException por exemplo, eu dou um catch nela e 
+	lanço uma ParseException com mensagem apropriada. Mas talvez seja melhor, além disso, deixar a exception original 
+	como root cause da ParseException, pra facilitar identificação do problema caso ocorra.
+	
