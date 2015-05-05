@@ -1,0 +1,33 @@
+1 - Remoção do atributo PField.many
+	O atributo é atualmente utilizado para especificar quantas vezes a lista irá se repetir @Many(repeated=x). 
+	Ele foi adicionado para permitir que elementos possam ser adicionados após a posição da lista, de uma forma 
+	que quem leia a String saiba diferenciar onde termina a lista e onde começa o próximo elemento. Porém, desde 
+	que o Parser foi alterado para funcionar através de posições especificadas (position=x), não é mais necessário 
+	usar o many com repeated, visto que um próximo elemento da lista teria sua própria posição exata já especificada.
+	
+	O problema é que devemos preencher o espaço entre o fim da lista e o próximo elemento, e esse espaço não pode ser 
+	preenchido simplesmente com " ", pois ele deve ser preenchido com o nullVaue dos elementos da lista, pois dessa 
+	forma que ler saberá de que se trata de um elemento nulo e poderá parar de iterar pela lista. caso contrário quem 
+	lesse a string gerada poderia preencher uma lista com vários elementos vazios, o que seria indesejado.
+	
+	Uma solução pensada é que ao adicionar a lista, quando ela acabar, deve ser adicionado o nullValue dos valores da lista 
+	até a posição do próximo elemento. Para tanto, será necessário saber qual é a posição do próximo elemento no momento 
+	em que se popula a lista. E para tanto parece ser necessário realizar uma ordenação dos PFields por position, permitindo 
+	assim saber qual o próximo elemento e sua posição.
+
+2 - Tratamento de tipos
+	Atualmente é suportado apenas String, Objetos, List<String> e List<Objetos>.
+	Deve permitir todos os tipos primitivos, e também java.util.Date. Para Date, deixar configurável um SimpleDateFormatter 
+	que será utilizado no parse da String pro objeto e vice-versa. (pensar na possibilidade de deixar esse formatter global 
+	(para todos os parses) e também confígurável para um parse específico (talevz um metodo sobrescrito recebendo um 
+	formatter))
+	
+	podemos deixar, podemos fazer com que o comportamento padrão para int, long e double seja fill=LEFT e fillvalue='0' por 
+	conveniencia. como essa é uma regra que se aplica a esses tipos, e existirão regras que se aplicarão a outros tipos 
+	(exemplo o date que vai ter que fazer um format), talvez seja bom criar uma classe para cada tipo de tratamento, 
+	implementando uma interface em comum para todas, com algum método (por exemplo insertValueInString).. daí então poderia 
+	haver uma classe que seria responsável por instanciar o tipo certo da interface com base no tipo  do field. algo como:
+	FieldProcessor processor = FieldProcessorStrategy.discoverByType(field); esse método discoverByType retornaria por exemplo 
+	um DateProcessor, ou talvez um NumberProcessor, StringProcessor... assim temos o tratamento em várias classes ao invés de 
+	vários if's.
+	
