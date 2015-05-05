@@ -11,7 +11,7 @@ public class ObjectWithStringAndListOfObjectsWithMandatory {
 	private String string1;
 	
 	@Many(repeated = 3)
-	@PField(size = 773, clazz = ObjectWithMandatory.class)
+	@PField(size = 773)
 	private List<ObjectWithMandatory> roles;
 
 	public String getQuantidade() {

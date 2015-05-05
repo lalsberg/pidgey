@@ -9,7 +9,7 @@ public class ObjectWithListWithoutMany2 {
 	@PField(position = 1716, size = 4)
 	private String quantidade;
 	
-	@PField(size = 773, clazz = ObjectWithMandatory.class)
+	@PField(size = 773)
 	private List<ObjectWithMandatory> objectsWithId;
 
 	public String getQuantidade() {

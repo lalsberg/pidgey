@@ -1,6 +1,7 @@
 package br.com.pidgey.parser;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,14 +83,22 @@ public class Parser implements IParser {
 			}
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(pField.clazz() == String.class) {
+				if(field.getType() == String.class) {
 					int position = pField.position() + listSizeSum;
 					insertString(sb, pField, value, position);
 				} else {
-					createByClass(pField.clazz(), sb, value, 
+					createByClass(field.getType(), sb, value, 
 							listSizeSum);
 				}
 			} else {
+				Class<?> listGenericType = null;
+				try {
+					ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+					listGenericType = (Class<?>) genericType.getActualTypeArguments()[0];
+				} catch(ClassCastException e) {
+					throw new ParseException("The type of the field \"" + field.getName() + 
+							"\" should be parameterized");
+				}
 				
 				@SuppressWarnings("unchecked")
 				List<Object> values = (List<Object>) value;
@@ -109,7 +118,7 @@ public class Parser implements IParser {
 					listLimit = values.size();
 				}
 				
-				if(pField.clazz() == String.class) {
+				if(listGenericType == String.class) {
 					for(int i=0; i<listLimit; i++) {
 						int position = pField.position() + 
 								(pField.size() * i) + listSizeSum;
@@ -122,10 +131,8 @@ public class Parser implements IParser {
 					for(int i=0; i<listLimit; i++) {
 						Object value2 = (values == null || i >= values.size()) 
 								? null : values.get(i);
-						int innerListSizeSum = listSizeSum + 
-								(pField.size() * i);
-						createByClass(pField.clazz(), sb, value2, 
-								innerListSizeSum);
+						int innerListSizeSum = listSizeSum + (pField.size() * i);
+						createByClass(listGenericType, sb, value2, innerListSizeSum);
 					}
 				}
 			}
@@ -204,7 +211,7 @@ public class Parser implements IParser {
 			String value = "";
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(pField.clazz() == String.class) {
+				if(field.getType() == String.class) {
 					int position = pField.position() + listSizeSum;
 					boolean endOfNode = isEndOfNode(field, text, position);
 					if(endOfNode) {
@@ -227,8 +234,8 @@ public class Parser implements IParser {
 					}
 				} else {
 					try {
-						Object instance = pField.clazz().newInstance();
-						createByText(pField.clazz(), text, instance, listSizeSum);
+						Object instance = field.getType().newInstance();
+						createByText(field.getType(), text, instance, listSizeSum);
 						field.setAccessible(true);
 						try {
 							field.set(obj, instance);
@@ -237,13 +244,13 @@ public class Parser implements IParser {
 							throw new ParseException(e.getMessage());
 						}
 					} catch(InstantiationException e) {
-						String message = "The class " + pField.clazz() + 
+						String message = "The class " + field.getType() + 
 								" must provide a default constructor in order to be "
 								+ "created by using reflection.";
 						logger.error(message, e);
 						throw new ParseException(message);
 					} catch(IllegalAccessException e) {
-						String message = "Could not access the class " + pField.clazz() + 
+						String message = "Could not access the class " + field.getType() + 
 								". Are you sure the class and/or the constructor is "
 								+ "accessible?";
 						logger.error(message);
@@ -251,12 +258,20 @@ public class Parser implements IParser {
 					}
 				}
 			} else {
+				Class<?> listGenericType = null;
+				try {
+					ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+					listGenericType = (Class<?>) genericType.getActualTypeArguments()[0];
+				} catch(ClassCastException e) {
+					throw new ParseException("The type of the field " + field.getName() + 
+							" should be parameterized");
+				}
 				field.setAccessible(true);
 				List<Object> lista = new ArrayList<Object>();
 				Many many = field.getAnnotation(Many.class);
 				validateMany(field, many);
 				for(int i = 0; i < many.repeated(); i++) {
-					if(pField.clazz() == String.class) {
+					if(listGenericType == String.class) {
 						int position = pField.position() + 
 								(pField.size() * i) + listSizeSum;
 						boolean endOfNode = isEndOfNodeStringList(field, text, position);
@@ -272,22 +287,22 @@ public class Parser implements IParser {
 						lista.add(value);
 					} else {
 						try {
-							Object instance = pField.clazz().newInstance();
+							Object instance = listGenericType.newInstance();
 							int innerListSizeSum = listSizeSum + (pField.size() * i);
-							boolean endOfNode = createByText(pField.clazz(), 
+							boolean endOfNode = createByText(listGenericType, 
 									text, instance, innerListSizeSum);
 							if(endOfNode) {
 								break;
 							}
 							lista.add(instance);
 						} catch(InstantiationException e) {
-							String message = "The class " + pField.clazz() + 
+							String message = "The class " + listGenericType + 
 									" must provide a default constructor in order to be "
 									+ "created by using reflection.";
 							logger.error(message, e);
 							throw new ParseException(message);
 						} catch(IllegalAccessException e) {
-							String message = "Could not access the class " + pField.clazz() + 
+							String message = "Could not access the class " + listGenericType + 
 									". Are you sure the class and/or the constructor is "
 									+ "accessible?";
 							logger.error(message);

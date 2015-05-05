@@ -4,7 +4,7 @@ import br.com.pidgey.annotation.PField;
 
 public class ObjectWithObject {
 	
-	@PField(clazz=ObjectWithoutId.class)
+	@PField()
 	private ObjectWithoutId objectWithoutId;
 
 	public ObjectWithoutId getObjectWithoutId() {

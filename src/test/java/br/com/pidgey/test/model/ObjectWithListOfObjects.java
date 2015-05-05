@@ -8,7 +8,7 @@ import br.com.pidgey.annotation.PField;
 public class ObjectWithListOfObjects {
 	
 	@Many(repeated = 3)
-	@PField(size = 259, clazz = ObjectWithoutId.class)
+	@PField(size = 259)
 	private List<ObjectWithoutId> listObjectWithoutId;
 	
 }

@@ -17,7 +17,6 @@ import br.com.pidgey.enumeration.FillDirectionEnum;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PField {
-	Class<?> clazz() default String.class;
 	FillDirectionEnum fill() default FillDirectionEnum.RIGHT;
 	char fillValue() default ' ';
 	char nullFillValue() default ' ';

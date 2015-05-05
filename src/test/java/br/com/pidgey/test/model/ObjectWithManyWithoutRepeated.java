@@ -11,7 +11,7 @@ public class ObjectWithManyWithoutRepeated {
 	private String quantidade;
 	
 	@Many()
-	@PField(size = 773, clazz = ObjectWithMandatory.class)
+	@PField(size = 773)
 	private List<ObjectWithMandatory> roles;
 
 	public String getQuantidade() {
