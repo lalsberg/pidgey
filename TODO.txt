@@ -27,9 +27,10 @@
 	(exemplo o date que vai ter que fazer um format), talvez seja bom criar uma classe para cada tipo de tratamento, 
 	implementando uma interface em comum para todas, com algum método (por exemplo insertValueInString).. daí então poderia 
 	haver uma classe que seria responsável por instanciar o tipo certo da interface com base no tipo  do field. algo como:
-	FieldProcessor processor = FieldProcessorStrategy.discoverByType(field); esse método discoverByType retornaria por exemplo 
-	um DateProcessor, ou talvez um NumberProcessor, StringProcessor... assim temos o tratamento em várias classes ao invés de 
+	FieldProcessor processor = TypeParserFactory.discoverByType(field); esse método discoverByType retornaria por exemplo 
+	um DateParser, ou talvez um NumberParser, StringParser... assim temos o tratamento em várias classes ao invés de 
 	vários if's.
+	https://stackoverflow.com/questions/27232794/java-strategy-pattern-can-i-delegate-strategies-instantiation-in-the-context-c/27233388#27233388
 	
 3 - Pensar sobre alteração no ParseException
 	Talvez seja melhor permitir que a ParseException tenha um construtor a mais que receba um Throwable para aninhar a 
