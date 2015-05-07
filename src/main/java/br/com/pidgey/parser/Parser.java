@@ -14,6 +14,8 @@ import br.com.pidgey.annotation.Many;
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.enumeration.FillDirectionEnum;
 import br.com.pidgey.exception.ParseException;
+import br.com.pidgey.formatter.ITypeFormatter;
+import br.com.pidgey.formatter.FormatterUtil;
 
 /**
  * The parser to convert between String and Object
@@ -83,9 +85,21 @@ public class Parser implements IParser {
 			}
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(field.getType() == String.class) {
+				if(FormatterUtil.isWrapperOrString(field.getType())) {
 					int position = pField.position() + listSizeSum;
-					insertString(sb, pField, value, position);
+					
+					ITypeFormatter Typeformatter = FormatterUtil.getFormatter(field.getType());
+					String textValue = Typeformatter.toText(pField, value);
+					
+					//manter isso abaixo ou lancar exception? acho que nao deveria ter nada > size
+					//posso ver onde que seria lancada a exception. acho que no insertvalue. dai 
+					//fazer um check antes do textValue.size > pfield.size, caso true, lancar ex.
+					
+					//CRIAR classe de test pra garantir essa exception.
+					textValue = textValue.substring(0, pField.size());
+					
+					insertValue(sb, pField, textValue, position);
+					
 				} else {
 					createByClass(field.getType(), sb, value, 
 							listSizeSum);
@@ -160,6 +174,19 @@ public class Parser implements IParser {
 			sb.append(value);
 		} else {
 			sb.replace(position, position + pField.size(), (String)value);
+		}
+	}
+	
+	private void insertValue(StringBuilder sb, 
+			PField pField, String value, int position) {
+		
+		if(position >= sb.length()) {
+			while (position > sb.length()) {
+				sb.append(" ");
+			}
+			sb.append(value);
+		} else {
+			sb.replace(position, position + pField.size(), value);
 		}
 	}
 

@@ -18,8 +18,8 @@ import br.com.pidgey.enumeration.FillDirectionEnum;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PField {
 	FillDirectionEnum fill() default FillDirectionEnum.RIGHT;
-	char fillValue() default ' ';
-	char nullFillValue() default ' ';
+	char fillValue() default '#'; //TODO passar pra um enum
+	char nullFillValue() default '#'; //TODO passar pra um enum
 	int size() default 0;
 	int position() default -1;
 }
