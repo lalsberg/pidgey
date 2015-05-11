@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import br.com.pidgey.annotation.Mandatory;
 import br.com.pidgey.annotation.Many;
 import br.com.pidgey.annotation.PField;
+import br.com.pidgey.converter.TypeDefinition;
+import br.com.pidgey.converter.TypeDefinitions;
 import br.com.pidgey.enumeration.FillDirectionEnum;
 import br.com.pidgey.exception.ParseException;
-import br.com.pidgey.formatter.TypeFormatter;
+import br.com.pidgey.formatter.Formatter;
 import br.com.pidgey.formatter.FormatterUtil;
 
 /**
@@ -88,8 +90,10 @@ public class Parser implements IParser {
 				if(FormatterUtil.isJavaType(field.getType())) {
 					int position = pField.position() + listSizeSum;
 					
-					TypeFormatter typeformatter = FormatterUtil.getFormatter(field.getType());
-					String textValue = typeformatter.toText(pField, value);
+					TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
+					Formatter formatter = new Formatter(typeDefinition);
+					
+					String textValue = formatter.toText(pField, value);
 					
 					//TODO
 					//manter isso abaixo ou lancar exception? acho que nao deveria ter nada > size
@@ -239,26 +243,21 @@ public class Parser implements IParser {
 			String value = "";
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				//TODO usar o formatter. o teste pra log ja tá pronto
-//				if(field.getType() == String.class) {
 				if(FormatterUtil.isJavaType(field.getType())) {
+					
+					TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
+					Formatter formatter = new Formatter(typeDefinition);
+					
 					int position = pField.position() + listSizeSum;
-					boolean endOfNode = isEndOfNode(field, text, position);
+					
+					boolean endOfNode = isEndOfNode(field, text, position, typeDefinition);
 					if(endOfNode) {
 						return endOfNode;
 					}
 					value = text.substring(position, position + size);
 					
-					TypeFormatter typeFormatter = FormatterUtil.getFormatter(field.getType());
-					Object valueObject = typeFormatter.fromText(pField, value);
+					Object valueObject = formatter.fromText(pField, value);
 					
-//					if(pField.fill() == FillDirectionEnum.LEFT) {
-//						value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
-//					} else {
-//						value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
-//					}
-//					boolean isNull = StringUtils.containsOnly(value, pField.nullFillValue());
-//					value = isNull ? null : value;
 					field.setAccessible(true);
 					try {
 						field.set(obj, valueObject);
@@ -306,9 +305,10 @@ public class Parser implements IParser {
 				validateMany(field, many);
 				for(int i = 0; i < many.repeated(); i++) {
 					if(listGenericType == String.class) {
-						int position = pField.position() + 
-								(pField.size() * i) + listSizeSum;
-						boolean endOfNode = isEndOfNodeStringList(field, text, position);
+						
+						TypeDefinition typeDefinition = TypeDefinitions.getDefinition(listGenericType);
+						int position = pField.position() + (pField.size() * i) + listSizeSum;
+						boolean endOfNode = isEndOfNodeStringList(field, text, position, typeDefinition);
 						if(endOfNode) {
 							break;
 						}
@@ -391,13 +391,15 @@ public class Parser implements IParser {
 	 * If the text is over or have found a Mandatory field null
 	 * 
 	 * @param field
+	 * @param typeDefinition 
 	 * @param value
 	 * @return <code>true</code> if the value of the element is all 
 	 * composed by the specified nullfillValue parameter of the PField 
 	 * annotation, or if the text is over;
 	 * 		   <code>false</code> otherwise.
 	 */
-	private boolean isEndOfNode(Field field, String text, int position) {
+	private boolean isEndOfNode(Field field, String text, int position, 
+			TypeDefinition typeDefinition) {
 		boolean endOfNode = false;
 		
 		PField pfield = field.getAnnotation(PField.class);
@@ -407,15 +409,26 @@ public class Parser implements IParser {
 			endOfNode = true;
 		} else {
 			String value = text.substring(position, position + size);
-			if(pfield.fill() == FillDirectionEnum.LEFT) {
-				value = StringUtils.stripStart(value, String.valueOf(pfield.fillValue()));
+			
+			char actualFillValue = FormatterUtil.obtainFillValue(
+					pfield.fillValue(), typeDefinition.getDefaultFillValue());
+			
+			char actualNullFillValue = FormatterUtil.obtainNullFillValue(
+					pfield.nullFillValue(), typeDefinition.getDefaultNullFillValue());
+			
+			FillDirectionEnum actualFillDirection = 
+					FormatterUtil.obtainFillDirection(pfield.fill(), 
+					typeDefinition.getDefaultFillDirection());
+			
+			if(actualFillDirection == FillDirectionEnum.LEFT) {
+				value = StringUtils.stripStart(value, String.valueOf(actualFillValue));
 			} else {
-				value = StringUtils.stripEnd(value, String.valueOf(pfield.fillValue()));
+				value = StringUtils.stripEnd(value, String.valueOf(actualFillValue));
 			}
 			
 			Mandatory id = field.getAnnotation(Mandatory.class);
 			if(id != null) {
-				boolean allDefault = StringUtils.containsOnly(value, pfield.nullFillValue());
+				boolean allDefault = StringUtils.containsOnly(value, actualNullFillValue);
 				endOfNode = allDefault;
 			}
 		}
@@ -429,9 +442,10 @@ public class Parser implements IParser {
 	 * @param field
 	 * @param text
 	 * @param position
+	 * @param typeDefinition 
 	 * @return
 	 */
-	private boolean isEndOfNodeStringList(Field field, String text, int position) {
+	private boolean isEndOfNodeStringList(Field field, String text, int position, TypeDefinition typeDefinition) {
 		boolean endOfNode = false;
 		
 		PField pfield = field.getAnnotation(PField.class);
@@ -441,13 +455,24 @@ public class Parser implements IParser {
 			endOfNode = true;
 		} else {
 			String value = text.substring(position, position + size);
-			if(pfield.fill() == FillDirectionEnum.LEFT) {
-				value = StringUtils.stripStart(value, String.valueOf(pfield.fillValue()));
+			
+			char actualFillValue = FormatterUtil.obtainFillValue(
+					pfield.fillValue(), typeDefinition.getDefaultFillValue());
+			
+			char actualNullFillValue = FormatterUtil.obtainNullFillValue(
+					pfield.nullFillValue(), typeDefinition.getDefaultNullFillValue());
+			
+			FillDirectionEnum actualFillDirection = 
+					FormatterUtil.obtainFillDirection(pfield.fill(), 
+					typeDefinition.getDefaultFillDirection());
+			
+			if(actualFillDirection == FillDirectionEnum.LEFT) {
+				value = StringUtils.stripStart(value, String.valueOf(actualFillValue));
 			} else {
-				value = StringUtils.stripEnd(value, String.valueOf(pfield.fillValue()));
+				value = StringUtils.stripEnd(value, String.valueOf(actualFillValue));
 			}
 			
-			boolean allDefault = StringUtils.containsOnly(value, pfield.nullFillValue());
+			boolean allDefault = StringUtils.containsOnly(value, actualNullFillValue);
 			endOfNode = allDefault;
 		}
 		return endOfNode;

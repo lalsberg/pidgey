@@ -1,48 +1,45 @@
 package br.com.pidgey.formatter;
 
-import static br.com.pidgey.enumeration.FillDirectionEnum.LEFT;
 import static br.com.pidgey.enumeration.FillDirectionEnum.RIGHT;
 
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.pidgey.annotation.PField;
-import br.com.pidgey.converter.TypeConverter;
+import br.com.pidgey.converter.TypeDefinition;
 import br.com.pidgey.enumeration.FillDirectionEnum;
 
-public class NumberFormatter implements TypeFormatter {
+public class Formatter {
 	
-	private static final char defaultFillValue = '0';
-	private static final char defaultNullFillValue = ' ';
-	private static final FillDirectionEnum defaultFillDirection = LEFT;
-	private final TypeConverter typeConverter;
+	private final TypeDefinition typeDefinition;
 	
-	public NumberFormatter(TypeConverter typeConverter) {
-		this.typeConverter = typeConverter;
+	public Formatter(TypeDefinition typeDefinition) {
+		this.typeDefinition = typeDefinition;
 	}
 
 	public String toText(PField pField, Object value) {
 		
 		char actualFillValue = FormatterUtil.obtainFillValue(
-				pField.fillValue(), defaultFillValue);
+				pField.fillValue(), typeDefinition.getDefaultFillValue());
 		
 		char actualNullFillValue = FormatterUtil.obtainNullFillValue(
-				pField.nullFillValue(), defaultNullFillValue);
+				pField.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 		
-		char theFillValue = FormatterUtil.checkFillValue(
-				value, actualFillValue, actualNullFillValue);
+		char theFillValue = FormatterUtil.checkFillValue(value, 
+				actualFillValue, actualNullFillValue);
 		
 		FillDirectionEnum actualFillDirection = 
 				FormatterUtil.obtainFillDirection(pField.fill(), 
-				defaultFillDirection);
+				typeDefinition.getDefaultFillDirection());
 		
-		String valueStr = value != null ? String.valueOf(value) : "";
+		value = value != null ? value : "";
+		String valueStr = String.valueOf(value);
 		
 		if(actualFillDirection == RIGHT) {
-			valueStr = StringUtils.rightPad(String.valueOf(value), 
-					pField.size(), theFillValue);
+			valueStr = StringUtils.rightPad(valueStr, pField.size(), 
+					theFillValue);
 		} else {
-			valueStr = StringUtils.leftPad(String.valueOf(value), 
-					pField.size(), theFillValue);
+			valueStr = StringUtils.leftPad(valueStr, pField.size(), 
+					theFillValue);
 		}
 		
 		return valueStr;
@@ -51,11 +48,11 @@ public class NumberFormatter implements TypeFormatter {
 	public Object fromText(PField pField, String value) {
 		
 		char actualFillValue = FormatterUtil.obtainFillValue(
-				pField.fillValue(), defaultFillValue);
+				pField.fillValue(), typeDefinition.getDefaultFillValue());
 		
 		FillDirectionEnum actualFillDirection = 
 				FormatterUtil.obtainFillDirection(pField.fill(), 
-				defaultFillDirection);
+				typeDefinition.getDefaultFillDirection());
 		
 		if(actualFillDirection == RIGHT) {
 			value = StringUtils.stripEnd(value, String.valueOf(actualFillValue));
@@ -64,11 +61,11 @@ public class NumberFormatter implements TypeFormatter {
 		}
 		
 		char actualNullFillValue = FormatterUtil.obtainNullFillValue(
-				pField.nullFillValue(), defaultNullFillValue);
+				pField.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 		
 		value = FormatterUtil.checkFieldValue(value, actualNullFillValue);
 		
-		return typeConverter.convert(value);
+		return typeDefinition.convert(value);
 	}
-	
+
 }

@@ -4,8 +4,6 @@ import static br.com.pidgey.enumeration.FillDirectionEnum.UNSPECIFIED;
 
 import org.apache.commons.lang3.StringUtils;
 
-import br.com.pidgey.converter.TypeConverter;
-import br.com.pidgey.converter.TypeConverters;
 import br.com.pidgey.enumeration.FillDirectionEnum;
 
 public class FormatterUtil {
@@ -32,27 +30,6 @@ public class FormatterUtil {
 				clazz == Double.class;
 		
 		return isJavaType;
-	}
-	
-	public static TypeFormatter getFormatter(Class<?> clazz) {
-		
-		TypeFormatter typeFormatter = null;
-		TypeConverter typeConverter = TypeConverters.getConverter(clazz);
-		
-		if(clazz == String.class) {
-			typeFormatter = new StringFormatter();
-		} else if(clazz == Long.TYPE || clazz == Long.class || 
-				clazz == Integer.TYPE || clazz == Integer.class) {
-
-			typeFormatter = new NumberFormatter(typeConverter);
-		} else {
-			//TODO throw exception
-		}
-		
-		//TODO: double, java.util.Date, etc. 
-		//(ver quais tratamentos especificos existem nos sistemas.)
-		
-		return typeFormatter;
 	}
 	
 	public static char obtainFillValue(char fieldFillValue, 
