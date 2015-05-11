@@ -7,10 +7,10 @@ For example:
 Parsing the class 
 ```
 public class HelloWorld {
-  @PField(position=0)
+  @PField(position=0, size=6)
   private String string1 = "Hello ";
 
-  @PField(position=6)
+  @PField(position=6, size=6)
   private String string2 = "World!";
 }
 ```
