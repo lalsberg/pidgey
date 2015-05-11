@@ -1,33 +1,52 @@
 package br.com.pidgey.formatter;
 
-import br.com.pidgey.annotation.PField;
+import static br.com.pidgey.enumeration.FillDirectionEnum.UNSPECIFIED;
+
+import org.apache.commons.lang3.StringUtils;
+
+import br.com.pidgey.converter.TypeConverter;
+import br.com.pidgey.converter.TypeConverters;
+import br.com.pidgey.enumeration.FillDirectionEnum;
 
 public class FormatterUtil {
 	
-	public static boolean isWrapperOrString(Class<?> clazz) {
+	public static boolean isJavaType(Class<?> clazz) {
 		
-		boolean isWrapperOrString = 
-				clazz == String.class || 
+		boolean isJavaType = 
+				clazz == String.class ||
+				clazz == Integer.TYPE || 
+				clazz == Long.TYPE || 
 				clazz == Boolean.TYPE || 
 				clazz == Character.TYPE || 
 				clazz == Byte.TYPE || 
 				clazz == Short.TYPE || 
-				clazz == Integer.TYPE || 
-				clazz == Long.TYPE || 
 				clazz == Float.TYPE || 
-				clazz == Double.TYPE;
+				clazz == Double.TYPE || 
+				clazz == Boolean.class || 
+				clazz == Character.class || 
+				clazz == Byte.class || 
+				clazz == Short.class || 
+				clazz == Integer.class || 
+				clazz == Long.class || 
+				clazz == Float.class || 
+				clazz == Double.class;
 		
-		return isWrapperOrString;
+		return isJavaType;
 	}
 	
-	public static ITypeFormatter getFormatter(Class<?> clazz) {
+	public static TypeFormatter getFormatter(Class<?> clazz) {
 		
-		ITypeFormatter typeFormatter = null;
+		TypeFormatter typeFormatter = null;
+		TypeConverter typeConverter = TypeConverters.getConverter(clazz);
 		
 		if(clazz == String.class) {
 			typeFormatter = new StringFormatter();
-		} else if(clazz == Long.TYPE || clazz == Integer.TYPE) {
-			typeFormatter = new NumberFormatter();
+		} else if(clazz == Long.TYPE || clazz == Long.class || 
+				clazz == Integer.TYPE || clazz == Integer.class) {
+
+			typeFormatter = new NumberFormatter(typeConverter);
+		} else {
+			//TODO throw exception
 		}
 		
 		//TODO: double, java.util.Date, etc. 
@@ -36,38 +55,76 @@ public class FormatterUtil {
 		return typeFormatter;
 	}
 	
-	/**
-	 * Return the fill value considering if the value is null 
-	 * and considering the priority of specified fill-value and 
-	 * null-fill-value of pField over the formatter specified 
-	 * fill-value and null-fill-value.
-	 * @param pField
-	 * @param value
-	 * @param formatterFillValue
-	 * @param formatterNullFillValue
-	 * @return
-	 */
-	public static char obtainFillValue(PField pField, Object value, 
-			char formatterFillValue, char formatterNullFillValue) {
-
+	public static char obtainFillValue(char fieldFillValue, 
+			char formatterFillValue) {
+		
 		char actualFillValue;
 		
-		if(value != null) {
-			//TODO usar um enum. tb tem essa anotacao todo no PField
-			if(pField.fillValue() != '#') { 
-				actualFillValue = pField.fillValue();
-			} else {
-				actualFillValue = formatterFillValue;
-			}
+		//TODO usar um enum. tb tem essa anotacao todo no PField. UNSPECIFIED, ZERO, EMPTYCHAR
+		if(fieldFillValue != '#') { 
+			actualFillValue = fieldFillValue;
 		} else {
-			if(pField.nullFillValue() != '#') {
-				actualFillValue = pField.nullFillValue();
-			} else {
-				actualFillValue = formatterNullFillValue;
-			}
+			actualFillValue = formatterFillValue;
 		}
 		
 		return actualFillValue;
+	}
+	
+	public static char obtainNullFillValue(char fieldNullFillValue, 
+			char formatterNullFillValue) {
+		
+		char actualNullFillValue;
+		
+		//TODO usar enum tb. talvez usar a mesma do fillvalue?
+		if(fieldNullFillValue != '#') {
+			actualNullFillValue = fieldNullFillValue;
+		} else {
+			actualNullFillValue = formatterNullFillValue;
+		}
+		
+		return actualNullFillValue;
+	}
+	
+	public static FillDirectionEnum obtainFillDirection(
+			FillDirectionEnum fieldFillDirection, FillDirectionEnum 
+			formatterFillDirection) {
+		
+		FillDirectionEnum actualFillDirection;
+		
+		if(fieldFillDirection != UNSPECIFIED) { 
+			actualFillDirection = fieldFillDirection;
+		} else {
+			actualFillDirection = formatterFillDirection;
+		}
+		
+		return actualFillDirection;
+	}
+
+	public static char checkFillValue(Object value, char fillValue,
+			char nullFillValue) {
+		
+		char theFillValue;
+		
+		if(value != null) {
+			theFillValue = fillValue;
+		} else {
+			theFillValue = nullFillValue;
+		}
+		
+		return theFillValue;
+	}
+	
+	public static String checkFieldValue(String value, char 
+			nullFillValue) {
+		
+		boolean isNull = StringUtils.containsOnly(value, 
+				nullFillValue);
+		
+		if(isNull) {
+			value = null;
+		}
+		
+		return value;
 	}
 
 }

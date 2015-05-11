@@ -14,7 +14,7 @@ import br.com.pidgey.annotation.Many;
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.enumeration.FillDirectionEnum;
 import br.com.pidgey.exception.ParseException;
-import br.com.pidgey.formatter.ITypeFormatter;
+import br.com.pidgey.formatter.TypeFormatter;
 import br.com.pidgey.formatter.FormatterUtil;
 
 /**
@@ -85,12 +85,13 @@ public class Parser implements IParser {
 			}
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(FormatterUtil.isWrapperOrString(field.getType())) {
+				if(FormatterUtil.isJavaType(field.getType())) {
 					int position = pField.position() + listSizeSum;
 					
-					ITypeFormatter Typeformatter = FormatterUtil.getFormatter(field.getType());
-					String textValue = Typeformatter.toText(pField, value);
+					TypeFormatter typeformatter = FormatterUtil.getFormatter(field.getType());
+					String textValue = typeformatter.toText(pField, value);
 					
+					//TODO
 					//manter isso abaixo ou lancar exception? acho que nao deveria ter nada > size
 					//posso ver onde que seria lancada a exception. acho que no insertvalue. dai 
 					//fazer um check antes do textValue.size > pfield.size, caso true, lancar ex.
@@ -238,23 +239,29 @@ public class Parser implements IParser {
 			String value = "";
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(field.getType() == String.class) {
+				//TODO usar o formatter. o teste pra log ja tá pronto
+//				if(field.getType() == String.class) {
+				if(FormatterUtil.isJavaType(field.getType())) {
 					int position = pField.position() + listSizeSum;
 					boolean endOfNode = isEndOfNode(field, text, position);
 					if(endOfNode) {
 						return endOfNode;
 					}
 					value = text.substring(position, position + size);
-					if(pField.fill() == FillDirectionEnum.LEFT) {
-						value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
-					} else {
-						value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
-					}
-					boolean isNull = StringUtils.containsOnly(value, pField.nullFillValue());
-					value = isNull ? null : value;
+					
+					TypeFormatter typeFormatter = FormatterUtil.getFormatter(field.getType());
+					Object valueObject = typeFormatter.fromText(pField, value);
+					
+//					if(pField.fill() == FillDirectionEnum.LEFT) {
+//						value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
+//					} else {
+//						value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
+//					}
+//					boolean isNull = StringUtils.containsOnly(value, pField.nullFillValue());
+//					value = isNull ? null : value;
 					field.setAccessible(true);
 					try {
-						field.set(obj, value);
+						field.set(obj, valueObject);
 					} catch (IllegalAccessException e) {
 						logger.error("Could not access field " + field.getName());
 						throw new ParseException(e.getMessage());

@@ -17,7 +17,8 @@ import br.com.pidgey.enumeration.FillDirectionEnum;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PField {
-	FillDirectionEnum fill() default FillDirectionEnum.RIGHT;
+//	FillDirectionEnum fill() default FillDirectionEnum.RIGHT;
+	FillDirectionEnum fill() default FillDirectionEnum.UNSPECIFIED;
 	char fillValue() default '#'; //TODO passar pra um enum
 	char nullFillValue() default '#'; //TODO passar pra um enum
 	int size() default 0;

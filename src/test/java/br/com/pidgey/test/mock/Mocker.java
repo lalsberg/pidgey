@@ -12,6 +12,10 @@ import br.com.pidgey.test.model.ObjectWithObjectWithoutAnything;
 import br.com.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
 import br.com.pidgey.test.model.ObjectWithoutDefaultConstructor;
 import br.com.pidgey.test.model.ObjectWithoutId;
+import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
+import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
+import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
+import br.com.pidgey.test.model.types.ObjectWithLongWrapper;
 
 public class Mocker {
 	
@@ -248,4 +252,48 @@ public class Mocker {
 		return sb.toString();
 	}
 	
+	public static ObjectWithLongPrimitive getObjectWithLongPrimitive() {
+		ObjectWithLongPrimitive request = new ObjectWithLongPrimitive();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(1l);
+		return request;
+	}
+	
+	public static String getStringObjectWithLongOrIntPrimitiveOrWrapper() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("0001"); //idSistema
+		
+		return sb.toString();
+	}
+	
+	public static ObjectWithLongWrapper getObjectWithLongWrapper() {
+		ObjectWithLongWrapper request = new ObjectWithLongWrapper();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(1l);
+		return request;
+	}
+	
+	public static ObjectWithIntegerPrimitive getObjectWithIntegerPrimitive() {
+		ObjectWithIntegerPrimitive request = new ObjectWithIntegerPrimitive();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(1);
+		return request;
+	}
+	
+	public static ObjectWithIntegerWrapper getObjectWithIntegerWrapper() {
+		ObjectWithIntegerWrapper request = new ObjectWithIntegerWrapper();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(1);
+		return request;
+	}
 }

@@ -2,9 +2,9 @@ package br.com.pidgey.formatter;
 
 import br.com.pidgey.annotation.PField;
 
-public interface ITypeFormatter {
+public interface TypeFormatter {
 	
 	String toText(PField pField, Object value);
-	Object fromText(String value);
+	Object fromText(PField field, String value);
 
 }
