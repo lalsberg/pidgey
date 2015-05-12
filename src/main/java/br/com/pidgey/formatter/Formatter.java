@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.converter.TypeDefinition;
 import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.exception.ParseException;
 
 public class Formatter {
 	
@@ -16,7 +17,7 @@ public class Formatter {
 		this.typeDefinition = typeDefinition;
 	}
 
-	public String toText(PField pField, Object value) {
+	public String toText(PField pField, Object value) throws ParseException {
 		
 		char actualFillValue = FormatterUtil.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
@@ -32,20 +33,20 @@ public class Formatter {
 				typeDefinition.getDefaultFillDirection());
 		
 		value = value != null ? value : "";
-		String valueStr = String.valueOf(value);
+		String stringValue = typeDefinition.convertToText(value);
 		
 		if(actualFillDirection == RIGHT) {
-			valueStr = StringUtils.rightPad(valueStr, pField.size(), 
+			stringValue = StringUtils.rightPad(stringValue, pField.size(), 
 					theFillValue);
 		} else {
-			valueStr = StringUtils.leftPad(valueStr, pField.size(), 
+			stringValue = StringUtils.leftPad(stringValue, pField.size(), 
 					theFillValue);
 		}
 		
-		return valueStr;
+		return stringValue;
 	}
 
-	public Object fromText(PField pField, String value) {
+	public Object fromText(PField pField, String value) throws ParseException {
 		
 		char actualFillValue = FormatterUtil.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
@@ -65,7 +66,7 @@ public class Formatter {
 		
 		value = FormatterUtil.checkFieldValue(value, actualNullFillValue);
 		
-		return typeDefinition.convert(value);
+		return typeDefinition.convertFromText(value);
 	}
 
 }

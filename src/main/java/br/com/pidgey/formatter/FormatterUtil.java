@@ -2,6 +2,8 @@ package br.com.pidgey.formatter;
 
 import static br.com.pidgey.enumeration.FillDirection.UNSPECIFIED;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.pidgey.enumeration.FillDirection;
@@ -28,7 +30,8 @@ public class FormatterUtil {
 				clazz == Integer.class || 
 				clazz == Long.class || 
 				clazz == Float.class || 
-				clazz == Double.class;
+				clazz == Double.class || 
+				clazz == Date.class;
 		
 		return isJavaType;
 	}

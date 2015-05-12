@@ -1,6 +1,11 @@
 package br.com.pidgey.test.run;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +14,9 @@ import br.com.pidgey.exception.ParseException;
 import br.com.pidgey.parser.IParser;
 import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
+import br.com.pidgey.test.model.types.ObjectWithBooleanPrimitive;
+import br.com.pidgey.test.model.types.ObjectWithBooleanWrapper;
+import br.com.pidgey.test.model.types.ObjectWithDate;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
@@ -66,5 +74,63 @@ public class ParserFromTextTypesTest {
 		ObjectWithIntegerWrapper check = Mocker.getObjectWithIntegerWrapper();
 		assertEquals(check.getIdSistema(), responseObj.getIdSistema());
 	}
+	
+	//boolean true
+	
+	@Test
+	public void testFromTextObjectWithBooleanPrimitiveTrue() throws ParseException {
+		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperTrue();
+		ObjectWithBooleanPrimitive responseObj = 
+				parser.fromText(ObjectWithBooleanPrimitive.class, response);
+		assertTrue(responseObj.isTheBoolean());
+	}
+	
+	//boolean false
+	
+	@Test
+	public void testFromTextObjectWithBooleanPrimitiveFalse() throws ParseException {
+		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperFalse();
+		ObjectWithBooleanPrimitive responseObj = 
+				parser.fromText(ObjectWithBooleanPrimitive.class, response);
+		assertFalse(responseObj.isTheBoolean());
+	}
+	
+	//Boolean true
+	
+	@Test
+	public void testFromTextObjectWithBooleanWrapperTrue() throws ParseException {
+		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperTrue();
+		ObjectWithBooleanWrapper responseObj = 
+				parser.fromText(ObjectWithBooleanWrapper.class, response);
+		assertTrue(responseObj.isTheBoolean());
+	}
+	
+	//Boolean false
+	
+	@Test
+	public void testFromTextObjectWithBooleanWrapperFalse() throws ParseException {
+		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperFalse();
+		ObjectWithBooleanWrapper responseObj = 
+				parser.fromText(ObjectWithBooleanWrapper.class, response);
+		assertFalse(responseObj.isTheBoolean());
+	}
+	
+	//Date
+	
+	@Test
+	public void testFromTextObjectWithDate() throws ParseException, 
+			java.text.ParseException {
+		String response = Mocker.getStringObjectWithDate();
+		ObjectWithDate responseObj = 
+				parser.fromText(ObjectWithDate.class, response);
+		
+		String datePattern="yyyy-MM-dd";
+		SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+		String dateStr = "2015-05-12";
+		Date check = dateFormat.parse(dateStr);
+		
+		assertEquals(check, responseObj.getDate());
+	}
+	
 
 }

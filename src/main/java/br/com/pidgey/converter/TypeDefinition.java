@@ -2,6 +2,7 @@ package br.com.pidgey.converter;
 
 import br.com.pidgey.enumeration.FillDirection;
 import br.com.pidgey.enumeration.FillValue;
+import br.com.pidgey.exception.ParseException;
 
 public abstract class TypeDefinition {
 	
@@ -17,7 +18,8 @@ public abstract class TypeDefinition {
 		this.defaultFillDirection = defaultFillDirection;
 	}
 
-	abstract public Object convert(String value);
+	abstract public Object convertFromText(String value) throws ParseException;
+	abstract public String convertToText(Object value) throws ParseException;
 
 	public FillValue getDefaultFillValue() {
 		return defaultFillValue;

@@ -1,6 +1,9 @@
 package br.com.pidgey.test.mock;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.com.pidgey.test.model.ObjectWithListOfObjects;
@@ -12,6 +15,9 @@ import br.com.pidgey.test.model.ObjectWithObjectWithoutAnything;
 import br.com.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
 import br.com.pidgey.test.model.ObjectWithoutDefaultConstructor;
 import br.com.pidgey.test.model.ObjectWithoutId;
+import br.com.pidgey.test.model.types.ObjectWithBooleanPrimitive;
+import br.com.pidgey.test.model.types.ObjectWithBooleanWrapper;
+import br.com.pidgey.test.model.types.ObjectWithDate;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
@@ -296,4 +302,103 @@ public class Mocker {
 		request.setIdSistema(1);
 		return request;
 	}
+	
+	public static String getStringObjectWithBooleanPrimitiveOrWrapperTrue() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("true "); //theBoolean
+		
+		return sb.toString();
+	}
+	
+	public static String getStringObjectWithBooleanPrimitiveOrWrapperFalse() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("false"); //theBoolean
+		
+		return sb.toString();
+	}
+	
+	public static String getStringObjectWithDate() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("2015-05-12"); //theDate
+		
+		return sb.toString();
+	}
+	
+	public static ObjectWithBooleanPrimitive getObjectWithBooleanPrimitiveTrue() {
+		ObjectWithBooleanPrimitive request = new ObjectWithBooleanPrimitive();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setTheBoolean(true);
+		return request;
+	}
+	
+	public static ObjectWithBooleanPrimitive getObjectWithBooleanPrimitiveFalse() {
+		ObjectWithBooleanPrimitive request = new ObjectWithBooleanPrimitive();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setTheBoolean(false);
+		return request;
+	}
+	
+	public static ObjectWithBooleanWrapper getObjectWithBooleanWrapperTrue() {
+		ObjectWithBooleanWrapper request = new ObjectWithBooleanWrapper();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setTheBoolean(true);
+		return request;
+	}
+	
+	public static ObjectWithBooleanWrapper getObjectWithBooleanWrapperFalse() {
+		ObjectWithBooleanWrapper request = new ObjectWithBooleanWrapper();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setTheBoolean(false);
+		return request;
+	}
+	
+	public static ObjectWithDate getObjectWithDate() {
+		ObjectWithDate request = new ObjectWithDate();
+		request.setNomePerfil("NOMEPERFIL");
+		
+		String datePattern="yyyy-MM-dd";
+		SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+		String dateStr = "2015-05-12";
+		
+		Date date = null;
+		try {
+			date = dateFormat.parse(dateStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		request.setDate(date);
+		return request;
+	}
+	
 }

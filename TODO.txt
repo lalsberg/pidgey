@@ -5,7 +5,7 @@
 	que o Parser foi alterado para funcionar através de posições especificadas (position=x), não é mais necessário 
 	usar o many com repeated, visto que um próximo elemento da lista teria sua própria posição exata já especificada.
 	
-	O problema é que devemos preencher o espaço entre o fim da lista e o próximo elemento, e esse espaço não pode ser 
+	O problema é que devemos preencher o espaco entre o fim da lista e o proximo elemento, e esse espaço não pode ser 
 	preenchido simplesmente com " ", pois ele deve ser preenchido com o nullVaue dos elementos da lista, pois dessa 
 	forma que ler saberá de que se trata de um elemento nulo e poderá parar de iterar pela lista. caso contrário quem 
 	lesse a string gerada poderia preencher uma lista com vários elementos vazios, o que seria indesejado.
@@ -16,18 +16,15 @@
 	assim saber qual o próximo elemento e sua posição.
 
 2 - Tratamento de tipos
-
-	-REMOVER formatvalue() que � usado no toText. usar o formatter
-	
-	Atualmente é suportado apenas String, Objetos, List<String> e List<Objetos>.
-	Deve permitir todos os tipos primitivos, e tambem java.util.Date. Para Date, deixar configurável um SimpleDateFormatter 
-	que será utilizado no parse da String pro objeto e vice-versa. (pensar na possibilidade de deixar esse formatter global 
-	(para todos os parses) e tambem configuravel para um parse especifico (talevz um metodo sobrescrito recebendo um 
-	formatter))
-	
-	
 		
+	[ ] fazer controle de exception em cada convert() do typedefinitions. logar.
 	
+	[ ] fazer os testes para controle de erros nas conversoes.
+	
+	[ ] pensar sobre refatorar typeDefinitions: estou usando heranca. pensar sobre interface + composicao. observar que 
+	no toText do tipo STRING por exemplo, eu converto pra Object (pois o pai recebe Object) e simplesmente converto pra 
+	String de novo. nao faz sentido pra ele. � como um empty method.
+		
 	
 3 - Pensar sobre alteracao no ParseException
 	Talvez seja melhor permitir que a ParseException tenha um construtor a mais que receba um Throwable para aninhar a 
