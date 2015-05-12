@@ -1,15 +1,16 @@
 package br.com.pidgey.converter;
 
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.enumeration.FillValue;
 
 public abstract class TypeDefinition {
 	
-	private final char defaultFillValue;
-	private final char defaultNullFillValue;
-	private final FillDirectionEnum defaultFillDirection;
+	private final FillValue defaultFillValue;
+	private final FillValue defaultNullFillValue;
+	private final FillDirection defaultFillDirection;
 	
-	public TypeDefinition(char defaultFillValue, char defaultNullFillValue,
-			FillDirectionEnum defaultFillDirection) {
+	public TypeDefinition(FillValue defaultFillValue, FillValue 
+			defaultNullFillValue, FillDirection defaultFillDirection) {
 		super();
 		this.defaultFillValue = defaultFillValue;
 		this.defaultNullFillValue = defaultNullFillValue;
@@ -18,15 +19,15 @@ public abstract class TypeDefinition {
 
 	abstract public Object convert(String value);
 
-	public char getDefaultFillValue() {
+	public FillValue getDefaultFillValue() {
 		return defaultFillValue;
 	}
 
-	public char getDefaultNullFillValue() {
+	public FillValue getDefaultNullFillValue() {
 		return defaultNullFillValue;
 	}
 
-	public FillDirectionEnum getDefaultFillDirection() {
+	public FillDirection getDefaultFillDirection() {
 		return defaultFillDirection;
 	}
 	

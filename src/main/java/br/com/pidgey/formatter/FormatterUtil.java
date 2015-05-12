@@ -1,10 +1,11 @@
 package br.com.pidgey.formatter;
 
-import static br.com.pidgey.enumeration.FillDirectionEnum.UNSPECIFIED;
+import static br.com.pidgey.enumeration.FillDirection.UNSPECIFIED;
 
 import org.apache.commons.lang3.StringUtils;
 
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.enumeration.FillValue;
 
 public class FormatterUtil {
 	
@@ -32,41 +33,39 @@ public class FormatterUtil {
 		return isJavaType;
 	}
 	
-	public static char obtainFillValue(char fieldFillValue, 
-			char formatterFillValue) {
+	public static char obtainFillValue(FillValue fieldFillValue, 
+			FillValue formatterFillValue) {
 		
 		char actualFillValue;
 		
-		//TODO usar um enum. tb tem essa anotacao todo no PField. UNSPECIFIED, ZERO, EMPTYCHAR
-		if(fieldFillValue != '#') { 
-			actualFillValue = fieldFillValue;
+		if(fieldFillValue != FillValue.UNSPECIFIED) { 
+			actualFillValue = fieldFillValue.getFillValue();
 		} else {
-			actualFillValue = formatterFillValue;
+			actualFillValue = formatterFillValue.getFillValue();
 		}
 		
 		return actualFillValue;
 	}
 	
-	public static char obtainNullFillValue(char fieldNullFillValue, 
-			char formatterNullFillValue) {
+	public static char obtainNullFillValue(FillValue fieldNullFillValue, 
+			FillValue formatterNullFillValue) {
 		
 		char actualNullFillValue;
 		
-		//TODO usar enum tb. talvez usar a mesma do fillvalue?
-		if(fieldNullFillValue != '#') {
-			actualNullFillValue = fieldNullFillValue;
+		if(fieldNullFillValue != FillValue.UNSPECIFIED) {
+			actualNullFillValue = fieldNullFillValue.getFillValue();
 		} else {
-			actualNullFillValue = formatterNullFillValue;
+			actualNullFillValue = formatterNullFillValue.getFillValue();
 		}
 		
 		return actualNullFillValue;
 	}
 	
-	public static FillDirectionEnum obtainFillDirection(
-			FillDirectionEnum fieldFillDirection, FillDirectionEnum 
+	public static FillDirection obtainFillDirection(
+			FillDirection fieldFillDirection, FillDirection 
 			formatterFillDirection) {
 		
-		FillDirectionEnum actualFillDirection;
+		FillDirection actualFillDirection;
 		
 		if(fieldFillDirection != UNSPECIFIED) { 
 			actualFillDirection = fieldFillDirection;

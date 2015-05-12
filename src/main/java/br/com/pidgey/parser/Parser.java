@@ -14,7 +14,8 @@ import br.com.pidgey.annotation.Many;
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.converter.TypeDefinition;
 import br.com.pidgey.converter.TypeDefinitions;
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.enumeration.FillValue;
 import br.com.pidgey.exception.ParseException;
 import br.com.pidgey.formatter.Formatter;
 import br.com.pidgey.formatter.FormatterUtil;
@@ -203,19 +204,19 @@ public class Parser implements IParser {
 	 * @return
 	 */
 	private Object formatValue(PField pField, Object value) {
-		char actualFillValue = pField.fillValue();
+		FillValue actualFillValue = pField.fillValue();
 		if (value == null) {
 			actualFillValue = pField.nullFillValue();
 		}
 		
 		value = value != null ? value : "";
 
-		if(pField.fill() == FillDirectionEnum.LEFT) {
+		if(pField.fill() == FillDirection.LEFT) {
 			value = StringUtils.leftPad((String) value, pField.size(), 
-					actualFillValue);
-		} else if(pField.fill() == FillDirectionEnum.RIGHT) {
+					actualFillValue.getFillValue());
+		} else if(pField.fill() == FillDirection.RIGHT) {
 			value = StringUtils.rightPad((String) value, pField.size(), 
-					actualFillValue);
+					actualFillValue.getFillValue());
 		}
 		
 		value = ((String) value).substring(0, pField.size());
@@ -313,7 +314,7 @@ public class Parser implements IParser {
 							break;
 						}
 						value = text.substring(position, position + size);
-						if(pField.fill() == FillDirectionEnum.LEFT) {
+						if(pField.fill() == FillDirection.LEFT) {
 							value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
 						} else {
 							value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
@@ -416,11 +417,11 @@ public class Parser implements IParser {
 			char actualNullFillValue = FormatterUtil.obtainNullFillValue(
 					pfield.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 			
-			FillDirectionEnum actualFillDirection = 
+			FillDirection actualFillDirection = 
 					FormatterUtil.obtainFillDirection(pfield.fill(), 
 					typeDefinition.getDefaultFillDirection());
 			
-			if(actualFillDirection == FillDirectionEnum.LEFT) {
+			if(actualFillDirection == FillDirection.LEFT) {
 				value = StringUtils.stripStart(value, String.valueOf(actualFillValue));
 			} else {
 				value = StringUtils.stripEnd(value, String.valueOf(actualFillValue));
@@ -462,11 +463,11 @@ public class Parser implements IParser {
 			char actualNullFillValue = FormatterUtil.obtainNullFillValue(
 					pfield.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 			
-			FillDirectionEnum actualFillDirection = 
+			FillDirection actualFillDirection = 
 					FormatterUtil.obtainFillDirection(pfield.fill(), 
 					typeDefinition.getDefaultFillDirection());
 			
-			if(actualFillDirection == FillDirectionEnum.LEFT) {
+			if(actualFillDirection == FillDirection.LEFT) {
 				value = StringUtils.stripStart(value, String.valueOf(actualFillValue));
 			} else {
 				value = StringUtils.stripEnd(value, String.valueOf(actualFillValue));

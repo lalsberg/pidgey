@@ -5,7 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.enumeration.FillValue;
 
 /**
  * Determines that the field will be parsed.
@@ -17,10 +18,9 @@ import br.com.pidgey.enumeration.FillDirectionEnum;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PField {
-//	FillDirectionEnum fill() default FillDirectionEnum.RIGHT;
-	FillDirectionEnum fill() default FillDirectionEnum.UNSPECIFIED;
-	char fillValue() default '#'; //TODO passar pra um enum
-	char nullFillValue() default '#'; //TODO passar pra um enum
+	FillDirection fill() default FillDirection.UNSPECIFIED;
+	FillValue fillValue() default FillValue.UNSPECIFIED;
+	FillValue nullFillValue() default FillValue.UNSPECIFIED;
 	int size() default 0;
 	int position() default -1;
 }

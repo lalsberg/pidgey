@@ -1,17 +1,16 @@
 package br.com.pidgey.test.model;
 
 import br.com.pidgey.annotation.PField;
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.enumeration.FillValue;
 
 public class ObjectWithUnaccessibleClass {
 	
 	@PField(position = 1716, size = 255)
 	private String nomePerfil;
 	
-	@PField(position = 1971, size = 4, fillValue = '0', fill = FillDirectionEnum.LEFT)
+	@PField(position = 1971, size = 4, fillValue = FillValue.ZERO, fill = FillDirection.LEFT)
 	private String idSistema;
-	
-	
 
 	private ObjectWithUnaccessibleClass() {
 		super();

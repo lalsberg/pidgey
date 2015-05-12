@@ -1,12 +1,12 @@
 package br.com.pidgey.formatter;
 
-import static br.com.pidgey.enumeration.FillDirectionEnum.RIGHT;
+import static br.com.pidgey.enumeration.FillDirection.RIGHT;
 
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.converter.TypeDefinition;
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
 
 public class Formatter {
 	
@@ -27,7 +27,7 @@ public class Formatter {
 		char theFillValue = FormatterUtil.checkFillValue(value, 
 				actualFillValue, actualNullFillValue);
 		
-		FillDirectionEnum actualFillDirection = 
+		FillDirection actualFillDirection = 
 				FormatterUtil.obtainFillDirection(pField.fill(), 
 				typeDefinition.getDefaultFillDirection());
 		
@@ -50,7 +50,7 @@ public class Formatter {
 		char actualFillValue = FormatterUtil.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
 		
-		FillDirectionEnum actualFillDirection = 
+		FillDirection actualFillDirection = 
 				FormatterUtil.obtainFillDirection(pField.fill(), 
 				typeDefinition.getDefaultFillDirection());
 		

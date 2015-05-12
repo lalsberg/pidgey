@@ -9,7 +9,7 @@ import br.com.pidgey.annotation.PField;
  * @author Coutinho
  * @author lalsberg
  */
-public enum FillDirectionEnum {
+public enum FillDirection {
 	LEFT,
 	RIGHT,
 	UNSPECIFIED;

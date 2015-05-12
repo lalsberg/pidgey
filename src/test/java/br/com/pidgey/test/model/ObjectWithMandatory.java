@@ -2,11 +2,12 @@ package br.com.pidgey.test.model;
 
 import br.com.pidgey.annotation.Mandatory;
 import br.com.pidgey.annotation.PField;
-import br.com.pidgey.enumeration.FillDirectionEnum;
+import br.com.pidgey.enumeration.FillDirection;
+import br.com.pidgey.enumeration.FillValue;
 
 public class ObjectWithMandatory {
 	
-	@PField(position = 1720, size = 4, fillValue = '0', fill = FillDirectionEnum.LEFT)
+	@PField(position = 1720, size = 4, fillValue = FillValue.ZERO, fill = FillDirection.LEFT)
 	private String idPerfil;
 	
 	@PField(position = 1724, size = 255)
@@ -16,7 +17,7 @@ public class ObjectWithMandatory {
 	@PField(position = 1979, size = 255)
 	private String nome;
 	
-	@PField(position = 2234, size = 4, fillValue = '0', fill = FillDirectionEnum.LEFT)
+	@PField(position = 2234, size = 4, fillValue = FillValue.ZERO, fill = FillDirection.LEFT)
 	private String idSistema;
 	
 	@PField(position = 2238, size = 255)
