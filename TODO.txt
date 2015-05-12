@@ -16,13 +16,16 @@
 	assim saber qual o próximo elemento e sua posição.
 
 2 - Tratamento de tipos
+
+	-REMOVER formatvalue() que � usado no toText. usar o formatter
+	
 	Atualmente é suportado apenas String, Objetos, List<String> e List<Objetos>.
 	Deve permitir todos os tipos primitivos, e tambem java.util.Date. Para Date, deixar configurável um SimpleDateFormatter 
 	que será utilizado no parse da String pro objeto e vice-versa. (pensar na possibilidade de deixar esse formatter global 
 	(para todos os parses) e tambem configuravel para um parse especifico (talevz um metodo sobrescrito recebendo um 
 	formatter))
 	
-	-REMOVER formatvalue() que � usado no toText. usar o formatter
+	
 		
 	
 	

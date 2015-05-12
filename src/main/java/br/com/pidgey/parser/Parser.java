@@ -15,7 +15,6 @@ import br.com.pidgey.annotation.PField;
 import br.com.pidgey.converter.TypeDefinition;
 import br.com.pidgey.converter.TypeDefinitions;
 import br.com.pidgey.enumeration.FillDirection;
-import br.com.pidgey.enumeration.FillValue;
 import br.com.pidgey.exception.ParseException;
 import br.com.pidgey.formatter.Formatter;
 import br.com.pidgey.formatter.FormatterUtil;
@@ -138,13 +137,22 @@ public class Parser implements IParser {
 					listLimit = values.size();
 				}
 				
-				if(listGenericType == String.class) {
+				if(FormatterUtil.isJavaType(listGenericType)) {
 					for(int i=0; i<listLimit; i++) {
 						int position = pField.position() + 
 								(pField.size() * i) + listSizeSum;
 						Object value2 = (values == null || i >= values.size()) 
 								? null : values.get(i);
-						insertString(sb, pField, value2, position);
+						
+						TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
+						Formatter formatter = new Formatter(typeDefinition);
+						
+						String textValue = formatter.toText(pField, value2);
+						
+						//TODO lancar exception ao inves de fazer o substring
+						textValue = textValue.substring(0, pField.size());
+						
+						insertValue(sb, pField, textValue, position);
 					}
 					return pField.size() * listLimit;
 				} else {
@@ -160,29 +168,6 @@ public class Parser implements IParser {
 		return 0;
 	}
 	
-	/**
-	 * @param sb
-	 * @param pField
-	 * @param value
-	 * @param position
-	 * 
-	 * Insert the String in the given position. 
-	 */
-	private void insertString(StringBuilder sb,
-			PField pField, Object value, int position) {
-		
-		value = formatValue(pField, value);
-		
-		if(position >= sb.length()) {
-			while (position > sb.length()) {
-				sb.append(" ");
-			}
-			sb.append(value);
-		} else {
-			sb.replace(position, position + pField.size(), (String)value);
-		}
-	}
-	
 	private void insertValue(StringBuilder sb, 
 			PField pField, String value, int position) {
 		
@@ -196,33 +181,6 @@ public class Parser implements IParser {
 		}
 	}
 
-	/**
-	 * Format the value using fillValue (or nullFillValue if it is null),  
-	 * fillDirection and size.
-	 * @param pField
-	 * @param value
-	 * @return
-	 */
-	private Object formatValue(PField pField, Object value) {
-		FillValue actualFillValue = pField.fillValue();
-		if (value == null) {
-			actualFillValue = pField.nullFillValue();
-		}
-		
-		value = value != null ? value : "";
-
-		if(pField.fill() == FillDirection.LEFT) {
-			value = StringUtils.leftPad((String) value, pField.size(), 
-					actualFillValue.getFillValue());
-		} else if(pField.fill() == FillDirection.RIGHT) {
-			value = StringUtils.rightPad((String) value, pField.size(), 
-					actualFillValue.getFillValue());
-		}
-		
-		value = ((String) value).substring(0, pField.size());
-		return value;
-	}
-	
 	/**
 	 * Converts part of the text into an object
 	 * @param clazz class of the object
