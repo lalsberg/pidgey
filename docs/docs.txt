@@ -132,3 +132,7 @@
 	Futuramente a ParseException sera alterada para que seja unchecked (visto que nao ha nada que o cliente possa fazer caso ocorra um 
 	erro de parse) e excecoes de java lancadas durante o processo de parse serao aninhadas na ParseException.
 	
+8. Testes
+
+	Pidgey utiliza JUnit. classes de teste podem ser encontradas em src/test/java/br/com/pidgey/test/run.
+	
