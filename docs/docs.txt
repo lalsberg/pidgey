@@ -1,8 +1,7 @@
 1. O que e?
 
-	Pidgey e um parser para converter entre objetos e Strings, utilizando anotacoes em campos para especificar a posicao exata que ele 
-	devera ocupar na String que sera gerada (ou a partir de qual posicao da String sera usada para setar o valor do campo, no caso do 
-	processo inverso de parse).
+	Pidgey e um parser para converter entre objetos e Strings, utilizando anotacoes em campos para especificar qual posicao da String o 
+	campo representa e como deve ser formatado.
 
 2. Exemplo de utilizacao
 
@@ -80,8 +79,7 @@
 		-O campo anotado e um elemento que esta dentro de um list (direta ou indiretamente);
 		-O campo anotado e usado em uma classe para fazer parse de String para objeto. (utilizacao no caso contrario nao causara erro, mas 
 		nao tera efeito algum).
-		-O campo anotado e um dos tipos basicos suportados pelo Pidgey (String, int, Integer, long, Long, double, Double, boolean, Boolean 
-		e java.util.Date)
+		-O campo anotado e um dos tipos basicos suportados pelo Pidgey (String, int, Integer, long, Long, boolean, Boolean e java.util.Date)
 
 
 4. Tipos suportados
@@ -91,15 +89,16 @@
 		String
 		int, Integer
 		long, Long
-		double, Double
 		boolean, Boolean
 		java.util.Date
 		Object
 		List<x> (x = qualquer um dos tipos citados acima. Toda List deve ter seu tipo generico explicitado obrigatoriamente)
 		
+		obs.: campos double e Double serao suportados em breve
+		
 5. Valores default e sobrescrita de valores default
 
-	Para os seguintes atributos de PField
+	Para cada um dos seguintes atributos de PField
 			fillValue,
 			nullFillValue,
 			fill
@@ -115,9 +114,21 @@
 		nullFillValue = FillValue.SPACE
 		fill = FillDirection.RIGHT
 		
-	int, Integer, long, Long, double, Double: 
+	int, Integer, long, Long: 
 	
 		fillValue = FillValue.ZERO
 		nullFillValue = FillValue.SPACE
 		fill = FillDirection.LEFT
+	
+6. Logging
+
+	Pidgey usa slf4j que e um facade de log, ou seja, o cliente esta livre para escolher sua implementacao. Sera necessario que o cliente 
+	tenha a dependencia de sua implementacao de logger, bem como uma dependencia extra que e especifica para a implementacao, esta que 
+	serve de bind entre o slf4j e a implementacao. Essa dependencia de bind pode ser facilmente encontrada no site do slf4j.
+	
+7. Tratamento de erros
+
+	Erros de parse resultarao em uma ParseException, que e uma excecao checked. Outras excecoes do java podem ocorrer.
+	Futuramente a ParseException sera alterada para que seja unchecked (visto que nao ha nada que o cliente possa fazer caso ocorra um 
+	erro de parse) e excecoes de java lancadas durante o processo de parse serao aninhadas na ParseException.
 	
