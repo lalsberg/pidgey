@@ -144,7 +144,7 @@ public class Parser implements IParser {
 						Object value2 = (values == null || i >= values.size()) 
 								? null : values.get(i);
 						
-						TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
+						TypeDefinition typeDefinition = TypeDefinitions.getDefinition(listGenericType);
 						Formatter formatter = new Formatter(typeDefinition);
 						
 						String textValue = formatter.toText(pField, value2);
