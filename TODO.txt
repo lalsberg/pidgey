@@ -1,19 +1,19 @@
-1 - Remoção do atributo PField.many
-	O atributo é atualmente utilizado para especificar quantas vezes a lista irá se repetir @Many(repeated=x). 
-	Ele foi adicionado para permitir que elementos possam ser adicionados após a posição da lista, de uma forma 
-	que quem leia a String saiba diferenciar onde termina a lista e onde começa o próximo elemento. Porém, desde 
-	que o Parser foi alterado para funcionar através de posições especificadas (position=x), não é mais necessário 
-	usar o many com repeated, visto que um próximo elemento da lista teria sua própria posição exata já especificada.
+1 - Remocao do atributo PField.many
+	O atributo e' atualmente utilizado para especificar quantas vezes a lista ira se repetir @Many(repeated=x). 
+	Ele foi adicionado para permitir que elementos possam ser adicionados apos a posicao da lista, de uma forma 
+	que quem leia a String saiba diferenciar onde termina a lista e onde comeca o proximo elemento. Porem, desde 
+	que o Parser foi alterado para funcionar atrave's de posicoes especificadas (position=x), nao e' mais necessario 
+	usar o many com repeated, visto que um proximo elemento da lista teria sua propria posicao exata ja especificada.
 	
-	O problema é que devemos preencher o espaco entre o fim da lista e o proximo elemento, e esse espaço não pode ser 
+	O problema e' que devemos preencher o espaco entre o fim da lista e o proximo elemento, e esse espaco nao pode ser 
 	preenchido simplesmente com " ", pois ele deve ser preenchido com o nullVaue dos elementos da lista, pois dessa 
-	forma que ler saberá de que se trata de um elemento nulo e poderá parar de iterar pela lista. caso contrário quem 
-	lesse a string gerada poderia preencher uma lista com vários elementos vazios, o que seria indesejado.
+	forma que ler sabera de que se trata de um elemento nulo e podera parar de iterar pela lista. caso contrario quem 
+	lesse a string gerada poderia preencher uma lista com varios elementos vazios, o que seria indesejado.
 	
-	Uma solução pensada é que ao adicionar a lista, quando ela acabar, deve ser adicionado o nullValue dos valores da lista 
-	até a posição do próximo elemento. Para tanto, será necessário saber qual é a posição do próximo elemento no momento 
-	em que se popula a lista. E para tanto parece ser necessário realizar uma ordenação dos PFields por position, permitindo 
-	assim saber qual o próximo elemento e sua posição.
+	Uma solucao pensada e' que ao adicionar a lista, quando ela acabar, deve ser adicionado o nullValue dos valores da lista 
+	ate' a posicao do proximo elemento. Para tanto, sera necessario saber qual e' a posicao do proximo elemento no momento 
+	em que se popula a lista. E para tanto parece ser necessario realizar uma ordenacao dos PFields por position, permitindo 
+	assim saber qual o proximo elemento e sua posicao.
 
 2 - Tratamento de tipos
 		
