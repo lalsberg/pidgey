@@ -16,7 +16,9 @@
 	assim saber qual o proximo elemento e sua posicao.
 
 2 - Tratamento de tipos
-		
+	
+	[ ] faltou o double. fazer.
+	
 	[ ] fazer controle de exception em cada convert() do typedefinitions. logar.
 	
 	[ ] fazer os testes para controle de erros nas conversoes.

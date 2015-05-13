@@ -1,0 +1,123 @@
+1. O que e?
+
+	Pidgey e um parser para converter entre objetos e Strings, utilizando anotacoes em campos para especificar a posicao exata que ele 
+	devera ocupar na String que sera gerada (ou a partir de qual posicao da String sera usada para setar o valor do campo, no caso do 
+	processo inverso de parse).
+
+2. Exemplo de utilizacao
+
+	public class Teste {
+	
+		public static void main(String[] args) {
+			
+			IParser parser = new Parser();
+			
+			//parse para String
+			ObjetoQualquerAnotado obj = new ObjetoQualquerAnotado();
+			String text = parser.toText(obj);
+			
+			//parse para objeto
+			ObjetoQualquerAnotado obj2 = parser.fromText(ObjetoQualquerAnotado.class, text);
+		}
+	
+	}
+
+3. Componentes
+
+3.1 Annotation @PField
+
+	PField e a principal anotacao, pois ela que define que um campo devera fazer parte do parse.
+
+	Atributos de PField:
+	
+		int position
+			inicio da posicao da String que corresponde ao valor do objeto
+		int size 
+			fim da posicao da String que corresponde ao valor do objeto
+		FillValue fillValue
+			valor que sera preenchido na string caso o size do campo seja < que o size especificado
+		FillValue nullFillValue
+			valor que será preenchido no campo caso o campo seja null. caso nao seja null, será usado o fillValue.
+		FillDirection fill 
+			enum para determinar se o valor deve ser preenchido para a esquerda ou para a direita caso size do campo seja < que size 
+			especificado.
+
+3.2 Annotation @Many
+
+	Utilizada em listas para especificar quantas repeticoes tem essa lista
+	
+	Atributos de Many
+	
+		int repeated
+			determina qual sera o size da list. seu uso e opcional, porem caso nao seja especificado em uma classe utilizada para fazer o 
+			parse de texto para objeto, causara um ParseException. Caso utilizada em uma classe para fazer o parse de um objeto para texto, 
+			nao causara exception e o proprio size() da lista sera utilizado para determinar quantos elementos adicionar na String.
+		
+3.3 Annotation @Mandatory
+
+	Quando e feito o parse de um trecho da String que corresponde a uma lista, o Mandatory e utilizado para sabermos que determinado campo 
+	funciona como um identificador de que a lista acabou ou nao. Por exemplo, considere as classes:
+	
+	public class Teste {
+		@PField();
+		List<Item> items;
+	}
+	
+	public class Item {
+		@Mandatory()
+		@PField(position = 0, size=5, nullFillValue=FillValue.SPACE)
+		String nomeItem;
+	}
+	
+	e o seguinte trecho que sera utilizado para preencher a lista de items:
+	"NOME1NOME2     "
+	
+	Utilizando o mandatory, podemos garantir que nao sera adicionado na lista de items um Item com nomeItem == "     ", pois o mandatory 
+	faz com que ocorra uma verificacao do valor da String com o valor do nullFillValue especificado. No exemplo acima, especificamos 
+	nulllFillValue como o caractere ' ' (valor da enum FillValue.SPACE).
+	
+	A annotation mandatory possui esse unico proposito, portanto seu uso somente faz sentido nas seguntes situacoes:
+		-O campo anotado e um elemento que esta dentro de um list (direta ou indiretamente);
+		-O campo anotado e usado em uma classe para fazer parse de String para objeto. (utilizacao no caso contrario nao causara erro, mas 
+		nao tera efeito algum).
+		-O campo anotado e um dos tipos basicos suportados pelo Pidgey (String, int, Integer, long, Long, double, Double, boolean, Boolean 
+		e java.util.Date)
+
+
+4. Tipos suportados
+
+	Os campos que podem ser anotados com PField sao os seguintes:
+	
+		String
+		int, Integer
+		long, Long
+		double, Double
+		boolean, Boolean
+		java.util.Date
+		Object
+		List<x> (x = qualquer um dos tipos citados acima. Toda List deve ter seu tipo generico explicitado obrigatoriamente)
+		
+5. Valores default e sobrescrita de valores default
+
+	Para os seguintes atributos de PField
+			fillValue,
+			nullFillValue,
+			fill
+	
+	sera utilizado um valor default de acordo com o tipo do campo anotado. esses valores default serao utilizados somente caso esses 
+	atributos sejam omitidos em pfield.
+	
+	Lista de valores default de acordo com o tipo do campo anotado:
+	
+	String, boolean, Boolean, Date: 
+	
+		fillValue = FillValue.SPACE
+		nullFillValue = FillValue.SPACE
+		fill = FillDirection.RIGHT
+		
+	int, Integer, long, Long, double, Double: 
+	
+		fillValue = FillValue.ZERO
+		nullFillValue = FillValue.SPACE
+		fill = FillDirection.LEFT
+	

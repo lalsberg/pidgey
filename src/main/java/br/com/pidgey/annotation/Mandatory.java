@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * <b>Where must be used</b><br/>
  * Processed only during fromText method.<br/>
- * Should be used only on String fields, which are directly or 
+ * Should be used only on java types fields, which are directly or 
  * indirectly inside Lists.<br/>
  * <b>How it works</b><br/> 
  * Used to determine if the List has ended and can stop adding 
