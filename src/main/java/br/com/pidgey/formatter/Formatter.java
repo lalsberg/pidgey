@@ -73,7 +73,7 @@ public class Formatter {
 		char actualNullFillValue = FormatterUtil.obtainNullFillValue(
 				pField.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 		
-		value = FormatterUtil.checkFieldValue(value, actualNullFillValue);
+		value = FormatterUtil.checkFieldValue(value, actualNullFillValue, field.getType());
 		
 		FieldValues fieldValues = FieldValuesFactory.getFieldValue(field, value);
 		return typeDefinition.convertFromText(fieldValues);
