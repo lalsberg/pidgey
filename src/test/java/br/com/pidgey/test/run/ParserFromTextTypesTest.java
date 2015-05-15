@@ -17,6 +17,7 @@ import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.types.ObjectWithBooleanPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithBooleanWrapper;
 import br.com.pidgey.test.model.types.ObjectWithDate;
+import br.com.pidgey.test.model.types.ObjectWithDoublePrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
@@ -73,6 +74,17 @@ public class ParserFromTextTypesTest {
 				parser.fromText(ObjectWithIntegerWrapper.class, response);
 		ObjectWithIntegerWrapper check = Mocker.getObjectWithIntegerWrapper();
 		assertEquals(check.getIdSistema(), responseObj.getIdSistema());
+	}
+	
+	// double
+	
+	@Test
+	public void testFromTextObjectWithDoublePrimitive() throws ParseException {
+		String response = Mocker.getStringObjectWithDoublePrimitiveOrWrapper();
+		ObjectWithDoublePrimitive responseObj = 
+				parser.fromText(ObjectWithDoublePrimitive.class, response);
+		ObjectWithDoublePrimitive check = Mocker.getObjectWithDoublePrimitive();
+		assertEquals(check.getIdSistema(), responseObj.getIdSistema(), 0.00);
 	}
 	
 	//boolean true

@@ -1,25 +1,41 @@
 package br.com.pidgey.converter;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import br.com.pidgey.converter.values.DoubleValues;
+import br.com.pidgey.converter.values.FieldValues;
 import br.com.pidgey.enumeration.FillDirection;
 import br.com.pidgey.enumeration.FillValue;
 import br.com.pidgey.exception.ParseException;
 
 public class TypeDefinitions {
 	
+	public static void main(String[] args) {
+		Object obj = null;
+		String str = String.valueOf(obj);
+		System.out.println(Long.parseLong(str));
+	}
+	
 	public static final TypeDefinition STRING = new TypeDefinition(
 			FillValue.SPACE, FillValue.SPACE, FillDirection.RIGHT) {
-		
+				
 		@Override
-	    public String convertFromText(String value) {
+	    public String convertFromText(FieldValues fieldValues) {
+			String value;
+			if(fieldValues.getValue() == null) {
+				value = null;
+			} else {
+				value = String.valueOf(fieldValues.getValue());
+			}
 	    	return value;
 	    }
 	    
 	    @Override
-	    public String convertToText(Object value) {
-	    	return String.valueOf(value);
+	    public String convertToText(FieldValues fieldValues) {
+	    	return String.valueOf(fieldValues.getValue());
 	    }
 	};
 	
@@ -27,13 +43,20 @@ public class TypeDefinitions {
 			FillValue.ZERO, FillValue.SPACE, FillDirection.LEFT) {
 		
 		@Override
-	    public Long convertFromText(String value) {
-	    	return Long.parseLong(value);
+	    public Long convertFromText(FieldValues fieldValues) {
+			Long value;
+			if(fieldValues.getValue() == null) {
+				value = null;
+			} else {
+				String valueStr = String.valueOf(fieldValues.getValue());
+				value = Long.parseLong(valueStr);
+			}
+	    	return value;
 	    }
 	    
 	    @Override
-	    public String convertToText(Object value) {
-	    	return String.valueOf(value);
+	    public String convertToText(FieldValues fieldValues) {
+	    	return String.valueOf(fieldValues.getValue());
 	    }
 	    
 	};
@@ -42,13 +65,61 @@ public class TypeDefinitions {
 			FillValue.ZERO, FillValue.SPACE, FillDirection.LEFT) {
 		
 		@Override
-	    public Integer convertFromText(String value) {
-	    	return Integer.parseInt(value);
+	    public Integer convertFromText(FieldValues fieldValues) {
+			Integer value;
+			if(fieldValues.getValue() == null) {
+				value = null;
+			} else {
+				String valueStr = String.valueOf(fieldValues.getValue());
+				value = Integer.parseInt(valueStr);
+			}
+	    	return value;
 	    }
 	    
 	    @Override
-	    public String convertToText(Object value) {
-	    	return String.valueOf(value);
+	    public String convertToText(FieldValues fieldValues) {
+	    	return String.valueOf(fieldValues.getValue());
+	    }
+	    
+	};
+	
+	public static final TypeDefinition DOUBLE = new TypeDefinition(
+			FillValue.ZERO, FillValue.SPACE, FillDirection.LEFT) {
+		
+		@Override
+	    public Double convertFromText(FieldValues fieldValues) {
+			Double value;
+			if(fieldValues.getValue() == null) {
+				value = null;
+			} else {
+				DoubleValues doubleValues = (DoubleValues) fieldValues;
+				String valueStr = String.valueOf(fieldValues.getValue());
+				int decimalPrecision = doubleValues.getDecimalPrecision();
+				int dividend = (int) Math.pow(10, decimalPrecision);
+				value = Double.parseDouble(valueStr) / dividend;
+			}
+	    	return value;
+	    }
+	    
+	    @Override
+	    public String convertToText(FieldValues fieldValues) {
+	    	DoubleValues doubleValues = (DoubleValues) fieldValues;
+	    	int decimalPrecision = doubleValues.getDecimalPrecision();
+	    	
+	    	DecimalFormat decimalFormat = new DecimalFormat();
+	    	decimalFormat.setMaximumFractionDigits(decimalPrecision);
+	    	decimalFormat.setMinimumFractionDigits(decimalPrecision);
+	    	
+	    	int maximumIntegerDigits = doubleValues.getSize() - decimalPrecision;
+	    	decimalFormat.setMaximumIntegerDigits(maximumIntegerDigits);
+	    	
+	    	DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+	    	symbols.setDecimalSeparator('.');
+	    	decimalFormat.setDecimalFormatSymbols(symbols);
+	    	
+	    	String value = decimalFormat.format(fieldValues.getValue()).replace(".", "");
+	    	
+	    	return value;
 	    }
 	    
 	};
@@ -57,17 +128,25 @@ public class TypeDefinitions {
 			FillValue.SPACE, FillValue.SPACE, FillDirection.RIGHT) {
 		
 		@Override
-	    public Boolean convertFromText(String value) throws ParseException {
-	    	return Boolean.parseBoolean(value);
+	    public Boolean convertFromText(FieldValues fieldValues) throws ParseException {
+			Boolean value;
+			if(fieldValues.getValue() == null) {
+				value = null;
+			} else {
+				String valueStr = String.valueOf(fieldValues.getValue());
+		    	value = Boolean.parseBoolean(valueStr);
+			}
+	    	return value;
 	    }
 	    
 	    @Override
-	    public String convertToText(Object value) {
-	    	return String.valueOf(value);
+	    public String convertToText(FieldValues fieldValues) {
+	    	return String.valueOf(fieldValues.getValue());
 	    }
 	    
 	};
 	
+	//TODO annotation que permite alterar o dateFormat padrao. @DateFormat("yyyy.mm.dddd")
 	public static final TypeDefinition DATE = new TypeDefinition(
 			FillValue.SPACE, FillValue.SPACE, FillDirection.RIGHT) {
 		
@@ -75,9 +154,18 @@ public class TypeDefinitions {
 		private SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
 		
 		@Override
-	    public Date convertFromText(String value) throws ParseException {
+	    public Date convertFromText(FieldValues fieldValues) throws ParseException {
 	    	try {
-	    		return dateFormat.parse(value);
+	    		
+	    		Date value;
+				if(fieldValues.getValue() == null) {
+					value = null;
+				} else {
+					String valueStr = String.valueOf(fieldValues.getValue());
+		    		value = dateFormat.parse(valueStr);
+				}
+		    	return value;
+	    		
 	    	} catch(java.text.ParseException e) {
 	    		//TODO log error. em todos os typedefinitions
 	    		throw new ParseException(e.getMessage());
@@ -85,8 +173,8 @@ public class TypeDefinitions {
 	    }
 
 		@Override
-		public String convertToText(Object value) throws ParseException {
-			return dateFormat.format(value);
+		public String convertToText(FieldValues fieldValues) throws ParseException {
+			return dateFormat.format(fieldValues.getValue());
 		}
 	    
 	};
@@ -103,9 +191,11 @@ public class TypeDefinitions {
 		} else if(clazz == Integer.TYPE || clazz == Integer.class) {
 			TypeDefinition = INTEGER;
 		} else if(clazz == Boolean.TYPE || clazz == Boolean.class) {
-			TypeDefinition = BOOLEAN;//TODO TESTES
+			TypeDefinition = BOOLEAN;
+		} else if(clazz == Double.TYPE || clazz == Double.class) {
+			TypeDefinition = DOUBLE; //TODO testes
 		} else if(clazz == Date.class) {
-			TypeDefinition = DATE;//TODO TESTES
+			TypeDefinition = DATE;
 		} else {
 			//TODO throw exception (invalid argument)
 		}

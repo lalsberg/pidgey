@@ -2,10 +2,14 @@ package br.com.pidgey.formatter;
 
 import static br.com.pidgey.enumeration.FillDirection.RIGHT;
 
+import java.lang.reflect.Field;
+
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.converter.TypeDefinition;
+import br.com.pidgey.converter.values.FieldValues;
+import br.com.pidgey.converter.values.FieldValuesFactory;
 import br.com.pidgey.enumeration.FillDirection;
 import br.com.pidgey.exception.ParseException;
 
@@ -17,7 +21,9 @@ public class Formatter {
 		this.typeDefinition = typeDefinition;
 	}
 
-	public String toText(PField pField, Object value) throws ParseException {
+	public String toText(Field field, Object value) throws ParseException {
+		
+		PField pField = field.getAnnotation(PField.class);
 		
 		char actualFillValue = FormatterUtil.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
@@ -33,7 +39,8 @@ public class Formatter {
 				typeDefinition.getDefaultFillDirection());
 		
 		value = value != null ? value : "";
-		String stringValue = typeDefinition.convertToText(value);
+		FieldValues fieldValues = FieldValuesFactory.getFieldValue(field, value);
+		String stringValue = typeDefinition.convertToText(fieldValues);
 		
 		if(actualFillDirection == RIGHT) {
 			stringValue = StringUtils.rightPad(stringValue, pField.size(), 
@@ -46,7 +53,9 @@ public class Formatter {
 		return stringValue;
 	}
 
-	public Object fromText(PField pField, String value) throws ParseException {
+	public Object fromText(Field field, String value) throws ParseException {
+		
+		PField pField = field.getAnnotation(PField.class);
 		
 		char actualFillValue = FormatterUtil.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
@@ -66,7 +75,8 @@ public class Formatter {
 		
 		value = FormatterUtil.checkFieldValue(value, actualNullFillValue);
 		
-		return typeDefinition.convertFromText(value);
+		FieldValues fieldValues = FieldValuesFactory.getFieldValue(field, value);
+		return typeDefinition.convertFromText(fieldValues);
 	}
 
 }

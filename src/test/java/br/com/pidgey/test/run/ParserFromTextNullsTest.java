@@ -11,6 +11,8 @@ import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.ObjectWithListOfStrings;
 import br.com.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
+import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
+import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 
 public class ParserFromTextNullsTest {
 	
@@ -47,6 +49,30 @@ public class ParserFromTextNullsTest {
 				responseStr);
 		assertEquals(check.getRoles().get(1).getDescricao(), 
 				response.getRoles().get(1).getDescricao());
+	}
+	
+	// Integer
+	
+	@Test
+	public void testFromTextObjectWithIntegerWrapperBindingNullvalueTextMustEvaluateNull() 
+			throws ParseException {
+		String responseStr = Mocker.getStringObjectWithNullLongOrIntPrimitiveOrWrapper();
+		ObjectWithIntegerWrapper check = Mocker.getObjectWithNullIntegerWrapper();
+		ObjectWithIntegerWrapper response = 
+				parser.fromText(ObjectWithIntegerWrapper.class, responseStr);
+		assertEquals(check.getIdSistema(), response.getIdSistema());
+	}
+	
+	// int
+	
+	@Test
+	public void testFromTextObjectWithIntegerPrimitiveBindingNullvalueTextMustEvaluateNull() 
+			throws ParseException {
+		String responseStr = Mocker.getStringObjectWithNullLongOrIntPrimitiveOrWrapper();
+		ObjectWithIntegerPrimitive check = Mocker.getObjectWithNullIntegerPrimitive();
+		ObjectWithIntegerPrimitive response = 
+				parser.fromText(ObjectWithIntegerPrimitive.class, responseStr);
+		assertEquals(check.getIdSistema(), response.getIdSistema());
 	}
 	
 	@Test

@@ -16,8 +16,17 @@
 	assim saber qual o proximo elemento e sua posicao.
 
 2 - Tratamento de tipos
+		
+	[ ] bug ParserFromTextNullsTest pra tipos primitivos tenta setar null
+		[] OU nem setar, vai ficar o valor padrao, OU setar especificando o valor padrao.
+	[ ] ver se vai ter bug no totext tb. provavelmente os nulls nao estarao mais setando o nullfillvalue!
+	[ ] update docs, release notes
+		-dealing with double and Double
+		-correcting bug parsing from 'null strings' (to string tb?)
+		
+	[ ] criar teste nullMustBreakTheList pra nulos dos tipos novos tambem, nao so de string. o atual ta no ParserFromTextNullsTest.
+		um tipo primitivo que da bind null, da break na list? alias um tipo primitivo tem como dar bind null??
 	
-	[ ] faltou o double. fazer.
 	
 	[ ] fazer controle de exception em cada convert() do typedefinitions. logar.
 	
@@ -34,3 +43,8 @@
 	lanco uma ParseException com mensagem apropriada. Mas talvez seja melhor, alem disso, deixar a exception original 
 	como root cause da ParseException, pra facilitar identificacao do problema caso ocorra.
 	
+4 - dependency injection
+	http://stackoverflow.com/questions/25396614/does-cdi-work-for-regular-java-application
+	https://randling.wordpress.com/2011/08/15/cdi-in-java-se/
+	
+5 - nullfillvalue de string completa. o date por exemplo poderia ser um "0001-01-01" algo assim, que o sat retorna quando nao tem.

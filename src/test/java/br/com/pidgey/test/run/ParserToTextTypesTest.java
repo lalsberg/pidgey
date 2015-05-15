@@ -12,6 +12,8 @@ import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.types.ObjectWithBooleanPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithBooleanWrapper;
 import br.com.pidgey.test.model.types.ObjectWithDate;
+import br.com.pidgey.test.model.types.ObjectWithDoublePrimitive;
+import br.com.pidgey.test.model.types.ObjectWithDoubleWrapper;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
@@ -63,6 +65,26 @@ public class ParserToTextTypesTest {
 		ObjectWithIntegerWrapper request = Mocker.getObjectWithIntegerWrapper();
 		String requestStr = parser.toText(request);
 		String check = Mocker.getStringObjectWithLongOrIntPrimitiveOrWrapper();
+		assertEquals(check, requestStr);
+	}
+	
+	// double
+	
+	@Test
+	public void testToTextObjectWithDoublePrimitive() throws ParseException {
+		ObjectWithDoublePrimitive request = Mocker.getObjectWithDoublePrimitive();
+		String requestStr = parser.toText(request);
+		String check = Mocker.getStringObjectWithDoublePrimitiveOrWrapper();
+		assertEquals(check, requestStr);
+	}
+	
+	// Double
+	
+	@Test
+	public void testToTextObjectWithDoubleWrapper() throws ParseException {
+		ObjectWithDoubleWrapper request = Mocker.getObjectWithDoubleWrapper();
+		String requestStr = parser.toText(request);
+		String check = Mocker.getStringObjectWithDoublePrimitiveOrWrapper();
 		assertEquals(check, requestStr);
 	}
 	

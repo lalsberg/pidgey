@@ -93,7 +93,7 @@ public class Parser implements IParser {
 					TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
 					Formatter formatter = new Formatter(typeDefinition);
 					
-					String textValue = formatter.toText(pField, value);
+					String textValue = formatter.toText(field, value);
 					
 					//TODO
 					//manter isso abaixo ou lancar exception? acho que nao deveria ter nada > size
@@ -147,7 +147,7 @@ public class Parser implements IParser {
 						TypeDefinition typeDefinition = TypeDefinitions.getDefinition(listGenericType);
 						Formatter formatter = new Formatter(typeDefinition);
 						
-						String textValue = formatter.toText(pField, value2);
+						String textValue = formatter.toText(field, value2);
 						
 						//TODO lancar exception ao inves de fazer o substring
 						textValue = textValue.substring(0, pField.size());
@@ -215,7 +215,7 @@ public class Parser implements IParser {
 					}
 					value = text.substring(position, position + size);
 					
-					Object valueObject = formatter.fromText(pField, value);
+					Object valueObject = formatter.fromText(field, value);
 					
 					field.setAccessible(true);
 					try {

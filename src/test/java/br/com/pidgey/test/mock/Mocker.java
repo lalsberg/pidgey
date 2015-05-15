@@ -18,6 +18,8 @@ import br.com.pidgey.test.model.ObjectWithoutId;
 import br.com.pidgey.test.model.types.ObjectWithBooleanPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithBooleanWrapper;
 import br.com.pidgey.test.model.types.ObjectWithDate;
+import br.com.pidgey.test.model.types.ObjectWithDoublePrimitive;
+import br.com.pidgey.test.model.types.ObjectWithDoubleWrapper;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
@@ -282,6 +284,40 @@ public class Mocker {
 		return sb.toString();
 	}
 	
+	public static String getStringObjectWithNullLongOrIntPrimitiveOrWrapper() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("    "); //idSistema
+		
+		return sb.toString();
+	}
+	
+	public static String getStringObjectWithDoublePrimitiveOrWrapper() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("1050"); //idSistema
+		
+		return sb.toString();
+	}
+	
 	public static ObjectWithLongWrapper getObjectWithLongWrapper() {
 		ObjectWithLongWrapper request = new ObjectWithLongWrapper();
 		request.setNomePerfil("NOMEPERFIL");
@@ -300,6 +336,33 @@ public class Mocker {
 		ObjectWithIntegerWrapper request = new ObjectWithIntegerWrapper();
 		request.setNomePerfil("NOMEPERFIL");
 		request.setIdSistema(1);
+		return request;
+	}
+	
+	public static ObjectWithIntegerWrapper getObjectWithNullIntegerWrapper() {
+		ObjectWithIntegerWrapper request = new ObjectWithIntegerWrapper();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(null);
+		return request;
+	}
+	
+	public static ObjectWithIntegerPrimitive getObjectWithNullIntegerPrimitive() {
+		ObjectWithIntegerPrimitive request = new ObjectWithIntegerPrimitive();
+		request.setNomePerfil("NOMEPERFIL");
+		return request;
+	}
+	
+	public static ObjectWithDoublePrimitive getObjectWithDoublePrimitive() {
+		ObjectWithDoublePrimitive request = new ObjectWithDoublePrimitive();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(10.50);
+		return request;
+	}
+	
+	public static ObjectWithDoubleWrapper getObjectWithDoubleWrapper() {
+		ObjectWithDoubleWrapper request = new ObjectWithDoubleWrapper();
+		request.setNomePerfil("NOMEPERFIL");
+		request.setIdSistema(10.50);
 		return request;
 	}
 	
