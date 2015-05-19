@@ -16,15 +16,10 @@
 	assim saber qual o proximo elemento e sua posicao.
 
 2 - Tratamento de tipos
-	
-	[ ] commit
-	
-	[ ] update docs, release notes
-		-dealing with double and Double
-		-correcting bug parsing from 'null strings'
 		
-	[ ] remover a factory FieldValuesFactory? posso usar o mesmo objeto para todos, nao faz sentido adicionar esse nivel de complexidade. mas ela nao evita nullpointer, 
+	[x] remover a factory FieldValuesFactory? posso usar o mesmo objeto para todos, nao faz sentido adicionar esse nivel de complexidade. mas ela nao evita nullpointer, 
 	garantindo que sempre os metodos receberao sempre somente o que importa, e assim ninguem tentará mecher no que pode estar null?
+		[x] nao. parece correto. http://stackoverflow.com/questions/15843645/how-would-i-overload-method-in-an-interface
 		
 	[ ] criar teste nullMustBreakTheList pra nulos dos tipos novos tambem, nao so de string. o atual ta no ParserFromTextNullsTest.
 		um tipo primitivo que da bind null, da break na list? alias um tipo primitivo tem como dar bind null??
