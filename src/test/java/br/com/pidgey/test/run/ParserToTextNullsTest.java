@@ -12,6 +12,8 @@ import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.ObjectWithListOfObjects;
 import br.com.pidgey.test.model.ObjectWithObject;
 import br.com.pidgey.test.model.ObjectWithObjectWithoutAnything;
+import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
+import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 
 public class ParserToTextNullsTest {
 	
@@ -47,4 +49,23 @@ public class ParserToTextNullsTest {
 		assertEquals(check, requestStr);
 	}
 	
+	// int
+	
+	@Test
+	public void testToTextObjectWithIntegerPrimitiveDefaultValue() throws ParseException {
+		ObjectWithIntegerPrimitive request = Mocker.getObjectWithNullIntegerPrimitive();
+		String requestStr = parser.toText(request);
+		String check = Mocker.getRequestStringObjectWithNullLongOrIntPrimitive();
+		assertEquals(check, requestStr);
+	}
+	
+	// Integer
+
+	@Test
+	public void testToTextObjectWithIntegerWrapperNullValue() throws ParseException {
+		ObjectWithIntegerWrapper request = Mocker.getObjectWithNullIntegerWrapper();
+		String requestStr = parser.toText(request);
+		String check = Mocker.getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper();
+		assertEquals(check, requestStr);
+	}
 }

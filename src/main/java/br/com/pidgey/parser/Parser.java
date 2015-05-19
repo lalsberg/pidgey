@@ -17,7 +17,8 @@ import br.com.pidgey.converter.TypeDefinitions;
 import br.com.pidgey.enumeration.FillDirection;
 import br.com.pidgey.exception.ParseException;
 import br.com.pidgey.formatter.Formatter;
-import br.com.pidgey.formatter.FormatterUtil;
+import br.com.pidgey.formatter.OverridingRules;
+import br.com.pidgey.util.TypeUtils;
 
 /**
  * The parser to convert between String and Object
@@ -87,7 +88,7 @@ public class Parser implements IParser {
 			}
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(FormatterUtil.isJavaType(field.getType())) {
+				if(TypeUtils.isJavaType(field.getType())) {
 					int position = pField.position() + listSizeSum;
 					
 					TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
@@ -137,7 +138,7 @@ public class Parser implements IParser {
 					listLimit = values.size();
 				}
 				
-				if(FormatterUtil.isJavaType(listGenericType)) {
+				if(TypeUtils.isJavaType(listGenericType)) {
 					for(int i=0; i<listLimit; i++) {
 						int position = pField.position() + 
 								(pField.size() * i) + listSizeSum;
@@ -202,7 +203,7 @@ public class Parser implements IParser {
 			String value = "";
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
-				if(FormatterUtil.isJavaType(field.getType())) {
+				if(TypeUtils.isJavaType(field.getType())) {
 					
 					TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
 					Formatter formatter = new Formatter(typeDefinition);
@@ -369,14 +370,14 @@ public class Parser implements IParser {
 		} else {
 			String value = text.substring(position, position + size);
 			
-			char actualFillValue = FormatterUtil.obtainFillValue(
+			char actualFillValue = OverridingRules.obtainFillValue(
 					pfield.fillValue(), typeDefinition.getDefaultFillValue());
 			
-			char actualNullFillValue = FormatterUtil.obtainNullFillValue(
+			char actualNullFillValue = OverridingRules.obtainNullFillValue(
 					pfield.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 			
 			FillDirection actualFillDirection = 
-					FormatterUtil.obtainFillDirection(pfield.fill(), 
+					OverridingRules.obtainFillDirection(pfield.fill(), 
 					typeDefinition.getDefaultFillDirection());
 			
 			if(actualFillDirection == FillDirection.LEFT) {
@@ -415,14 +416,14 @@ public class Parser implements IParser {
 		} else {
 			String value = text.substring(position, position + size);
 			
-			char actualFillValue = FormatterUtil.obtainFillValue(
+			char actualFillValue = OverridingRules.obtainFillValue(
 					pfield.fillValue(), typeDefinition.getDefaultFillValue());
 			
-			char actualNullFillValue = FormatterUtil.obtainNullFillValue(
+			char actualNullFillValue = OverridingRules.obtainNullFillValue(
 					pfield.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 			
 			FillDirection actualFillDirection = 
-					FormatterUtil.obtainFillDirection(pfield.fill(), 
+					OverridingRules.obtainFillDirection(pfield.fill(), 
 					typeDefinition.getDefaultFillDirection());
 			
 			if(actualFillDirection == FillDirection.LEFT) {

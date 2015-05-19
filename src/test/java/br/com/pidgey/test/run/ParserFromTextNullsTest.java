@@ -56,7 +56,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithIntegerWrapperBindingNullvalueTextMustEvaluateNull() 
 			throws ParseException {
-		String responseStr = Mocker.getStringObjectWithNullLongOrIntPrimitiveOrWrapper();
+		String responseStr = Mocker.getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper();
 		ObjectWithIntegerWrapper check = Mocker.getObjectWithNullIntegerWrapper();
 		ObjectWithIntegerWrapper response = 
 				parser.fromText(ObjectWithIntegerWrapper.class, responseStr);
@@ -68,7 +68,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithIntegerPrimitiveBindingNullvalueTextMustEvaluateNull() 
 			throws ParseException {
-		String responseStr = Mocker.getStringObjectWithNullLongOrIntPrimitiveOrWrapper();
+		String responseStr = Mocker.getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper();
 		ObjectWithIntegerPrimitive check = Mocker.getObjectWithNullIntegerPrimitive();
 		ObjectWithIntegerPrimitive response = 
 				parser.fromText(ObjectWithIntegerPrimitive.class, responseStr);

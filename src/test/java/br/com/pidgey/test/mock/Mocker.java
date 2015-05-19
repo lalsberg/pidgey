@@ -284,7 +284,7 @@ public class Mocker {
 		return sb.toString();
 	}
 	
-	public static String getStringObjectWithNullLongOrIntPrimitiveOrWrapper() {
+	public static String getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper() {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < 1716; i++) {
 			sb.append(" ");
@@ -297,6 +297,23 @@ public class Mocker {
 		}
 		
 		sb.append("    "); //idSistema
+		
+		return sb.toString();
+	}
+	
+	public static String getRequestStringObjectWithNullLongOrIntPrimitive() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 1716; i++) {
+			sb.append(" ");
+		}
+		
+		sb.append("NOMEPERFIL"); //nomeperfil
+		
+		for(int i = 0; i < 245; i++) { //nomePerfil fill
+			sb.append(" ");
+		}
+		
+		sb.append("0000"); //idSistema. the default value of int and long is 0.
 		
 		return sb.toString();
 	}

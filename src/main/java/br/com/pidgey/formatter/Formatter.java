@@ -25,17 +25,17 @@ public class Formatter {
 		
 		PField pField = field.getAnnotation(PField.class);
 		
-		char actualFillValue = FormatterUtil.obtainFillValue(
+		char actualFillValue = OverridingRules.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
 		
-		char actualNullFillValue = FormatterUtil.obtainNullFillValue(
+		char actualNullFillValue = OverridingRules.obtainNullFillValue(
 				pField.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 		
-		char theFillValue = FormatterUtil.checkFillValue(value, 
+		char theFillValue = OverridingRules.checkFillValue(value, 
 				actualFillValue, actualNullFillValue);
 		
 		FillDirection actualFillDirection = 
-				FormatterUtil.obtainFillDirection(pField.fill(), 
+				OverridingRules.obtainFillDirection(pField.fill(), 
 				typeDefinition.getDefaultFillDirection());
 		
 		value = value != null ? value : "";
@@ -57,11 +57,11 @@ public class Formatter {
 		
 		PField pField = field.getAnnotation(PField.class);
 		
-		char actualFillValue = FormatterUtil.obtainFillValue(
+		char actualFillValue = OverridingRules.obtainFillValue(
 				pField.fillValue(), typeDefinition.getDefaultFillValue());
 		
 		FillDirection actualFillDirection = 
-				FormatterUtil.obtainFillDirection(pField.fill(), 
+				OverridingRules.obtainFillDirection(pField.fill(), 
 				typeDefinition.getDefaultFillDirection());
 		
 		if(actualFillDirection == RIGHT) {
@@ -70,10 +70,10 @@ public class Formatter {
 			value = StringUtils.stripStart(value, String.valueOf(actualFillValue));
 		}
 		
-		char actualNullFillValue = FormatterUtil.obtainNullFillValue(
+		char actualNullFillValue = OverridingRules.obtainNullFillValue(
 				pField.nullFillValue(), typeDefinition.getDefaultNullFillValue());
 		
-		value = FormatterUtil.checkFieldValue(value, actualNullFillValue, field.getType());
+		value = OverridingRules.checkFieldValue(value, actualNullFillValue, field.getType());
 		
 		FieldValues fieldValues = FieldValuesFactory.getFieldValue(field, value);
 		return typeDefinition.convertFromText(fieldValues);

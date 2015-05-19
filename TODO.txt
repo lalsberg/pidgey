@@ -16,17 +16,20 @@
 	assim saber qual o proximo elemento e sua posicao.
 
 2 - Tratamento de tipos
-		
-	[ ] bug ParserFromTextNullsTest pra tipos primitivos tenta setar null
-		[] OU nem setar, vai ficar o valor padrao, OU setar especificando o valor padrao.
-	[ ] ver se vai ter bug no totext tb. provavelmente os nulls nao estarao mais setando o nullfillvalue!
+	
+	[ ] commit
+	
 	[ ] update docs, release notes
 		-dealing with double and Double
-		-correcting bug parsing from 'null strings' (to string tb?)
+		-correcting bug parsing from 'null strings'
+		
+	[ ] remover a factory FieldValuesFactory? posso usar o mesmo objeto para todos, nao faz sentido adicionar esse nivel de complexidade. mas ela nao evita nullpointer, 
+	garantindo que sempre os metodos receberao sempre somente o que importa, e assim ninguem tentará mecher no que pode estar null?
 		
 	[ ] criar teste nullMustBreakTheList pra nulos dos tipos novos tambem, nao so de string. o atual ta no ParserFromTextNullsTest.
 		um tipo primitivo que da bind null, da break na list? alias um tipo primitivo tem como dar bind null??
 	
+	[ ] em ParserFromTextNullsTest e ParserToTextNullsTest criar mais testes para os outros tipos, alem de Integer e int
 	
 	[ ] fazer controle de exception em cada convert() do typedefinitions. logar.
 	
