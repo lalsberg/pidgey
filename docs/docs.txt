@@ -41,7 +41,18 @@
 			enum para determinar se o valor deve ser preenchido para a esquerda ou para a direita caso size do campo seja < que size 
 			especificado.
 
-3.2 Annotation @Many
+3.2 Annotation @DoubleField
+	
+	Utilizada em tipos double e Double para especificar quantos digitos devem existir apos a virgula.
+	Por exemplo, ao fazer o parse de String para objeto da String "1050", se o campo double estiver 
+	anotado com @DoubleField(fractionDigits=2), então o valor obtido será 10.50
+	
+	Todo campo double/Double deve utilizar a anotacao, caso contrario resultara em exception
+	
+	Atributos de DoubleField
+		int fractionDigits
+ 
+3.3 Annotation @Many
 
 	Utilizada em listas para especificar quantas repeticoes tem essa lista
 	
@@ -52,7 +63,7 @@
 			parse de texto para objeto, causara um ParseException. Caso utilizada em uma classe para fazer o parse de um objeto para texto, 
 			nao causara exception e o proprio size() da lista sera utilizado para determinar quantos elementos adicionar na String.
 		
-3.3 Annotation @Mandatory
+3.4 Annotation @Mandatory
 
 	Quando e feito o parse de um trecho da String que corresponde a uma lista, o Mandatory e utilizado para sabermos que determinado campo 
 	funciona como um identificador de que a lista acabou ou nao. Por exemplo, considere as classes:
