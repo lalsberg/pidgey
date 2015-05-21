@@ -18,9 +18,11 @@
 2 - Tratamento de tipos
 		
 	[x] remover a factory FieldValuesFactory? posso usar o mesmo objeto para todos, nao faz sentido adicionar esse nivel de complexidade. mas ela nao evita nullpointer, 
-	garantindo que sempre os metodos receberao sempre somente o que importa, e assim ninguem tentará mecher no que pode estar null?
+	garantindo que sempre os metodos receberao sempre somente o que importa, e assim ninguem tentarï¿½ mecher no que pode estar null?
 		[x] nao. parece correto. http://stackoverflow.com/questions/15843645/how-would-i-overload-method-in-an-interface
-		
+	
+	[ ] pelo visto o fromText quando list ainda esta verificando apenas string, e nao javaType.
+	
 	[ ] criar teste nullMustBreakTheList pra nulos dos tipos novos tambem, nao so de string. o atual ta no ParserFromTextNullsTest.
 		um tipo primitivo que da bind null, da break na list? alias um tipo primitivo tem como dar bind null??
 	
@@ -32,7 +34,7 @@
 	
 	[ ] pensar sobre refatorar typeDefinitions: estou usando heranca. pensar sobre interface + composicao. observar que 
 	no toText do tipo STRING por exemplo, eu converto pra Object (pois o pai recebe Object) e simplesmente converto pra 
-	String de novo. nao faz sentido pra ele. é como um empty method.
+	String de novo. nao faz sentido pra ele. ï¿½ como um empty method.
 		
 	
 3 - Pensar sobre alteracao no ParseException
