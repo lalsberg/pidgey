@@ -36,7 +36,7 @@
 		FillValue fillValue
 			valor que sera preenchido na string caso o size do campo seja < que o size especificado
 		FillValue nullFillValue
-			valor que será preenchido no campo caso o campo seja null. caso nao seja null, será usado o fillValue.
+			valor que serï¿½ preenchido no campo caso o campo seja null. caso nao seja null, serï¿½ usado o fillValue.
 		FillDirection fill 
 			enum para determinar se o valor deve ser preenchido para a esquerda ou para a direita caso size do campo seja < que size 
 			especificado.
@@ -45,7 +45,7 @@
 	
 	Utilizada em tipos double e Double para especificar quantos digitos devem existir apos a virgula.
 	Por exemplo, ao fazer o parse de String para objeto da String "1050", se o campo double estiver 
-	anotado com @DoubleField(fractionDigits=2), então o valor obtido será 10.50
+	anotado com @DoubleField(fractionDigits=2), entï¿½o o valor obtido serï¿½ 10.50
 	
 	Todo campo double/Double deve utilizar a anotacao, caso contrario resultara em exception
 	
