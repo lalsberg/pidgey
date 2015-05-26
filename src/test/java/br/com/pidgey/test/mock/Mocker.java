@@ -22,6 +22,8 @@ import br.com.pidgey.test.model.types.ObjectWithDoublePrimitive;
 import br.com.pidgey.test.model.types.ObjectWithDoubleWrapper;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
+import br.com.pidgey.test.model.types.ObjectWithListOfIntegers;
+import br.com.pidgey.test.model.types.ObjectWithListOfStrings;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithLongWrapper;
 
@@ -258,6 +260,42 @@ public class Mocker {
 			sb.append("          ");
 		}
 		return sb.toString();
+	}
+	
+	public static String getStringObjectWithListOfString() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 3; i++) {
+			sb.append("ELEMENT   ");
+		}
+		return sb.toString();
+	}
+	
+	public static String getStringObjectWithListOfIntegers() {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 1; i < 4; i++) {
+			sb.append("000000000" + i);
+		}
+		return sb.toString();
+	}
+	
+	public static ObjectWithListOfIntegers getObjectWithListOfIntegers() {
+		ObjectWithListOfIntegers request = new ObjectWithListOfIntegers();
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		list.add(2);
+		list.add(3);
+		request.setList(list);
+		return request;
+	}
+	
+	public static ObjectWithListOfStrings getObjectWithListOfString() {
+		ObjectWithListOfStrings request = new ObjectWithListOfStrings();
+		List<String> list = new ArrayList<String>();
+		list.add("ELEMENT");
+		list.add("ELEMENT");
+		list.add("ELEMENT");
+		request.setTheList(list);
+		return request;
 	}
 	
 	public static ObjectWithLongPrimitive getObjectWithLongPrimitive() {

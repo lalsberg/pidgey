@@ -1,4 +1,4 @@
-package br.com.pidgey.test.model;
+package br.com.pidgey.test.model.types;
 
 import java.util.List;
 

@@ -9,10 +9,10 @@ import br.com.pidgey.exception.ParseException;
 import br.com.pidgey.parser.IParser;
 import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
-import br.com.pidgey.test.model.ObjectWithListOfStrings;
 import br.com.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
+import br.com.pidgey.test.model.types.ObjectWithListOfStrings;
 
 public class ParserFromTextNullsTest {
 	

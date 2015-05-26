@@ -29,7 +29,7 @@ public class TypeUtils {
 		return isJavaType;
 	}
 	
-public static String getJavaTypeDefaultValue(Class<?> clazz) {
+	public static String getJavaTypeDefaultValue(Class<?> clazz) {
 		
 		String defaultValue = null;
 		

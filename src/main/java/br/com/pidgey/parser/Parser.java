@@ -264,21 +264,19 @@ public class Parser implements IParser {
 				Many many = field.getAnnotation(Many.class);
 				validateMany(field, many);
 				for(int i = 0; i < many.repeated(); i++) {
-					if(listGenericType == String.class) {
+					if(TypeUtils.isJavaType(listGenericType)) {
 						
 						TypeDefinition typeDefinition = TypeDefinitions.getDefinition(listGenericType);
+						Formatter formatter = new Formatter(typeDefinition);
 						int position = pField.position() + (pField.size() * i) + listSizeSum;
 						boolean endOfNode = isEndOfNodeStringList(field, text, position, typeDefinition);
 						if(endOfNode) {
 							break;
 						}
 						value = text.substring(position, position + size);
-						if(pField.fill() == FillDirection.LEFT) {
-							value = StringUtils.stripStart(value, String.valueOf(pField.fillValue()));
-						} else {
-							value = StringUtils.stripEnd(value, String.valueOf(pField.fillValue()));
-						}
-						lista.add(value);
+						
+						Object valueObject = formatter.fromText(field, value);
+						lista.add(valueObject);
 					} else {
 						try {
 							Object instance = listGenericType.newInstance();

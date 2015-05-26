@@ -21,9 +21,7 @@
 	garantindo que sempre os metodos receberao sempre somente o que importa, e assim ninguem tentarï¿½ mecher no que pode estar null?
 		[x] nao. parece correto. http://stackoverflow.com/questions/15843645/how-would-i-overload-method-in-an-interface
 	
-	[ ] pelo visto o fromText quando list ainda esta verificando apenas string, e nao javaType. ficou ["teste  ", "teste  "]
-	
-	[ ] parece que deu erro em List<String>, ele nao cortou o espaço extra em cada string
+	[ ] fazer testes pro fromtext pra List de outros tipos alem de String e Integer
 	
 	[ ] criar teste nullMustBreakTheList pra nulos dos tipos novos tambem, nao so de string. o atual ta no ParserFromTextNullsTest.
 		um tipo primitivo que da bind null, da break na list? alias um tipo primitivo tem como dar bind null??

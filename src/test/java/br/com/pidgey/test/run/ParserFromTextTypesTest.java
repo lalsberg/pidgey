@@ -20,6 +20,8 @@ import br.com.pidgey.test.model.types.ObjectWithDate;
 import br.com.pidgey.test.model.types.ObjectWithDoublePrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
+import br.com.pidgey.test.model.types.ObjectWithListOfIntegers;
+import br.com.pidgey.test.model.types.ObjectWithListOfStrings;
 import br.com.pidgey.test.model.types.ObjectWithLongPrimitive;
 import br.com.pidgey.test.model.types.ObjectWithLongWrapper;
 
@@ -142,6 +144,54 @@ public class ParserFromTextTypesTest {
 		Date check = dateFormat.parse(dateStr);
 		
 		assertEquals(check, responseObj.getDate());
+	}
+	
+	//List<String>
+	
+	@Test
+	public void testFromTextObjectWithListOfStringsFirstElementsShouldMatch() throws ParseException {
+		String response = Mocker.getStringObjectWithListOfString();
+		ObjectWithListOfStrings responseObj = 
+				parser.fromText(ObjectWithListOfStrings.class, response);
+		
+		ObjectWithListOfStrings check = Mocker.getObjectWithListOfString();
+		assertEquals(check.getTheList().get(0), responseObj.getTheList().get(0));
+	}
+	
+	//List<String> second element
+	
+	@Test
+	public void testFromTextObjectWithListOfStringsSecondElementsShouldMatch() throws ParseException {
+		String response = Mocker.getStringObjectWithListOfString();
+		ObjectWithListOfStrings responseObj = 
+				parser.fromText(ObjectWithListOfStrings.class, response);
+		
+		ObjectWithListOfStrings check = Mocker.getObjectWithListOfString();
+		assertEquals(check.getTheList().get(1), responseObj.getTheList().get(1));
+	}
+	
+	//List<Integer>
+	
+	@Test
+	public void testFromTextObjectWithListOfIntegersFirstElementsShouldMatch() throws ParseException {
+		String response = Mocker.getStringObjectWithListOfIntegers();
+		ObjectWithListOfIntegers responseObj = 
+				parser.fromText(ObjectWithListOfIntegers.class, response);
+		
+		ObjectWithListOfIntegers check = Mocker.getObjectWithListOfIntegers();
+		assertEquals(check.getList().get(0), responseObj.getList().get(0));
+	}
+	
+	//List<Integer> second element
+	
+	@Test
+	public void testFromTextObjectWithListOfIntegersSecondElementsShouldMatch() throws ParseException {
+		String response = Mocker.getStringObjectWithListOfIntegers();
+		ObjectWithListOfIntegers responseObj = 
+				parser.fromText(ObjectWithListOfIntegers.class, response);
+		
+		ObjectWithListOfIntegers check = Mocker.getObjectWithListOfIntegers();
+		assertEquals(check.getList().get(1), responseObj.getList().get(1));
 	}
 	
 
