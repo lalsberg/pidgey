@@ -1,3 +1,7 @@
+Changes in version 1.1.1
+
+* corrected bugs on parsing from List of java types (List<String>, List<Integer> etc)
+
 Changes in version 1.1.0
 
 * supporting double and Double
