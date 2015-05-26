@@ -144,6 +144,17 @@ public class Mocker {
 		return request;
 	}
 	
+	public static ObjectWithoutId getObjectWithoutStringLongerThanSize() {
+		ObjectWithoutId request = new ObjectWithoutId();
+		
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 300; i++) { //nomePerfil longer (300) than size (255)
+			sb.append(" ");
+		}
+		request.setNomePerfil(sb.toString());
+		return request;
+	}
+	
 	public static String getStringObjectWithoutId() {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < 1716; i++) {

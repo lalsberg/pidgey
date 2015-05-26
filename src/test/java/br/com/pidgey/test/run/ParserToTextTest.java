@@ -24,9 +24,17 @@ public class ParserToTextTest {
 		parser = new Parser();
 	}
 	
-	@Test
-	public void testToTextObjectWithoutId() 
+	@Test(expected = ParseException.class)
+	public void testToTextObjectWithStringLargerThanItsSizeMustThrowException() 
 			throws ParseException {
+		ObjectWithoutId request = Mocker.getObjectWithoutStringLongerThanSize();
+		String requestStr = parser.toText(request);
+		String check = Mocker.getStringObjectWithoutId();
+		assertEquals(check, requestStr);
+	}
+	
+	@Test
+	public void testToTextObjectWithoutId() throws ParseException {
 		ObjectWithoutId request = Mocker.getObjectWithoutId();
 		String requestStr = parser.toText(request);
 		String check = Mocker.getStringObjectWithoutId();

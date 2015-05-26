@@ -1,13 +1,10 @@
 package br.com.pidgey.parser;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.pidgey.annotation.Mandatory;
 import br.com.pidgey.annotation.Many;
@@ -18,7 +15,9 @@ import br.com.pidgey.enumeration.FillDirection;
 import br.com.pidgey.exception.ParseException;
 import br.com.pidgey.formatter.Formatter;
 import br.com.pidgey.formatter.OverridingRules;
+import br.com.pidgey.util.ReflectionUtils;
 import br.com.pidgey.util.TypeUtils;
+import br.com.pidgey.validation.Validator;
 
 /**
  * The parser to convert between String and Object
@@ -28,34 +27,18 @@ import br.com.pidgey.util.TypeUtils;
  */
 public class Parser implements IParser {
 	
-	private static Logger logger = LoggerFactory.getLogger(Parser.class);
-	
 	public <T> T fromText(Class<T> clazz, String text) 
 			throws ParseException {
-		try {
-			T instance = clazz.newInstance();
+			T instance = ReflectionUtils.newInstance(clazz);
 			createByText(instance.getClass(), text, instance, 0);
 			return instance;
-		} catch(InstantiationException e) {
-			String message = "The class " + clazz + 
-					" must provide a default constructor in order to be "
-					+ "created by using reflection.";
-			logger.error(message, e);
-			throw new ParseException(message);
-		} catch(IllegalAccessException e) {
-			String message = "Could not access the class " + clazz + 
-					". Are you sure the class and/or the constructor is "
-					+ "accessible?";
-			logger.error(message);
-			throw new ParseException(message);
-		}
 	}
+	
 	public String toText(Object instance) throws ParseException{
 		StringBuilder sb = new StringBuilder();
 		createByClass(instance.getClass(), sb, instance, 0);
 		return sb.toString();
 	}
-	
 	
 	/**
 	 * Converts the object to a String depending on it's class
@@ -79,12 +62,7 @@ public class Parser implements IParser {
 			if(instance == null) {
 				value = null;
 			} else {
-				try {
-					value = field.get(instance);
-				} catch (IllegalAccessException e) {
-					throw new ParseException(e.getMessage());
-				}
-				
+				value = ReflectionUtils.getInstanceFieldValue(field, instance);
 			}
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
@@ -95,15 +73,7 @@ public class Parser implements IParser {
 					Formatter formatter = new Formatter(typeDefinition);
 					
 					String textValue = formatter.toText(field, value);
-					
-					//TODO
-					//manter isso abaixo ou lancar exception? acho que nao deveria ter nada > size
-					//posso ver onde que seria lancada a exception. acho que no insertvalue. dai 
-					//fazer um check antes do textValue.size > pfield.size, caso true, lancar ex.
-					
-					//CRIAR classe de test pra garantir essa exception.
-					textValue = textValue.substring(0, pField.size());
-					
+					Validator.validateStringIsNoLongerThanSize(textValue, pField.size(), field);
 					insertValue(sb, pField, textValue, position);
 					
 				} else {
@@ -111,25 +81,13 @@ public class Parser implements IParser {
 							listSizeSum);
 				}
 			} else {
-				Class<?> listGenericType = null;
-				try {
-					ParameterizedType genericType = (ParameterizedType) field.getGenericType();
-					listGenericType = (Class<?>) genericType.getActualTypeArguments()[0];
-				} catch(ClassCastException e) {
-					throw new ParseException("The type of the field \"" + field.getName() + 
-							"\" should be parameterized");
-				}
+				Class<?> listGenericType = ReflectionUtils.getFirstGenericType(field);
 				
 				@SuppressWarnings("unchecked")
 				List<Object> values = (List<Object>) value;
 					
 				Many many = field.getAnnotation(Many.class);
-				if(many == null) {
-					String message = "The collection " + field.getName() + 
-							" must be annotated with Many.";
-					logger.error(message);
-					throw new ParseException(message);
-				}
+				Validator.validateManyNotNull(field, many);
 				
 				int listLimit;
 				if(many.repeated() != -1) {
@@ -149,10 +107,7 @@ public class Parser implements IParser {
 						Formatter formatter = new Formatter(typeDefinition);
 						
 						String textValue = formatter.toText(field, value2);
-						
-						//TODO lancar exception ao inves de fazer o substring
-						textValue = textValue.substring(0, pField.size());
-						
+						Validator.validateStringIsNoLongerThanSize(textValue, pField.size(), field);
 						insertValue(sb, pField, textValue, position);
 					}
 					return pField.size() * listLimit;
@@ -200,9 +155,11 @@ public class Parser implements IParser {
 		for(Field field : fields) {
 			PField pField = field.getAnnotation(PField.class);
 			int size = pField.size();
-			String value = "";
+			String valueStr = "";
 			
 			if(!List.class.isAssignableFrom(field.getType())) {
+				Object value;
+				
 				if(TypeUtils.isJavaType(field.getType())) {
 					
 					TypeDefinition typeDefinition = TypeDefinitions.getDefinition(field.getType());
@@ -214,55 +171,22 @@ public class Parser implements IParser {
 					if(endOfNode) {
 						return endOfNode;
 					}
-					value = text.substring(position, position + size);
+					valueStr = text.substring(position, position + size);
+					value = formatter.fromText(field, valueStr);
 					
-					Object valueObject = formatter.fromText(field, value);
-					
-					field.setAccessible(true);
-					try {
-						field.set(obj, valueObject);
-					} catch (IllegalAccessException e) {
-						logger.error("Could not access field " + field.getName());
-						throw new ParseException(e.getMessage());
-					}
 				} else {
-					try {
-						Object instance = field.getType().newInstance();
-						createByText(field.getType(), text, instance, listSizeSum);
-						field.setAccessible(true);
-						try {
-							field.set(obj, instance);
-						} catch (IllegalAccessException e) {
-							logger.error("Could not access field " + field.getName());
-							throw new ParseException(e.getMessage());
-						}
-					} catch(InstantiationException e) {
-						String message = "The class " + field.getType() + 
-								" must provide a default constructor in order to be "
-								+ "created by using reflection.";
-						logger.error(message, e);
-						throw new ParseException(message);
-					} catch(IllegalAccessException e) {
-						String message = "Could not access the class " + field.getType() + 
-								". Are you sure the class and/or the constructor is "
-								+ "accessible?";
-						logger.error(message);
-						throw new ParseException(message);
-					}
+					value = ReflectionUtils.newInstance(field.getType());
+					createByText(field.getType(), text, value, listSizeSum);
 				}
+				
+				ReflectionUtils.setInstanceFieldValue(obj, field, value);
+				
 			} else {
-				Class<?> listGenericType = null;
-				try {
-					ParameterizedType genericType = (ParameterizedType) field.getGenericType();
-					listGenericType = (Class<?>) genericType.getActualTypeArguments()[0];
-				} catch(ClassCastException e) {
-					throw new ParseException("The type of the field " + field.getName() + 
-							" should be parameterized");
-				}
-				field.setAccessible(true);
-				List<Object> lista = new ArrayList<Object>();
+				Class<?> listGenericType = ReflectionUtils.getFirstGenericType(field);
+				List<Object> list = new ArrayList<Object>();
 				Many many = field.getAnnotation(Many.class);
-				validateMany(field, many);
+				Validator.validateManyNotNull(field, many);
+				Validator.validateRepeatedIsSpecified(field, many);
 				for(int i = 0; i < many.repeated(); i++) {
 					if(TypeUtils.isJavaType(listGenericType)) {
 						
@@ -273,58 +197,25 @@ public class Parser implements IParser {
 						if(endOfNode) {
 							break;
 						}
-						value = text.substring(position, position + size);
+						valueStr = text.substring(position, position + size);
 						
-						Object valueObject = formatter.fromText(field, value);
-						lista.add(valueObject);
+						Object valueObject = formatter.fromText(field, valueStr);
+						list.add(valueObject);
 					} else {
-						try {
-							Object instance = listGenericType.newInstance();
-							int innerListSizeSum = listSizeSum + (pField.size() * i);
-							boolean endOfNode = createByText(listGenericType, 
-									text, instance, innerListSizeSum);
-							if(endOfNode) {
-								break;
-							}
-							lista.add(instance);
-						} catch(InstantiationException e) {
-							String message = "The class " + listGenericType + 
-									" must provide a default constructor in order to be "
-									+ "created by using reflection.";
-							logger.error(message, e);
-							throw new ParseException(message);
-						} catch(IllegalAccessException e) {
-							String message = "Could not access the class " + listGenericType + 
-									". Are you sure the class and/or the constructor is "
-									+ "accessible?";
-							logger.error(message);
-							throw new ParseException(message);
+						Object instance = ReflectionUtils.newInstance(listGenericType);
+						int innerListSizeSum = listSizeSum + (pField.size() * i);
+						boolean endOfNode = createByText(listGenericType, 
+								text, instance, innerListSizeSum);
+						if(endOfNode) {
+							break;
 						}
+						list.add(instance);
 					}
 				}
-				try {
-					field.set(obj, lista);
-				} catch (IllegalAccessException e) {
-					logger.error("Could not access field " + field.getName());
-					throw new ParseException(e.getMessage());
-				}
+				ReflectionUtils.setInstanceFieldValue(obj, field, list);
 			}
 		}
 		return false;
-	}
-
-	private void validateMany(Field field, Many many) throws ParseException {
-		if(many == null) {
-			String message = "The collection " + field.getName() + 
-					" must be annotated with Many.";
-			logger.error(message);
-			throw new ParseException(message);
-		} else if(many.repeated() == -1) {
-			String message = "The Many annotation in the collection " + 
-		field.getName() + " must specify the attribute repeated.";
-			logger.error(message);
-			throw new ParseException(message);
-		}
 	}
 
 	/**
