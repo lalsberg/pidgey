@@ -6,7 +6,7 @@ package br.com.pidgey.exception;
  * @author lalsberg
  *
  */
-public class ParseException extends Exception {
+public class ParseException extends RuntimeException {
 
 	private static final long serialVersionUID = -6405859181573182765L;
 	
