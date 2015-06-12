@@ -11,14 +11,14 @@ package br.com.pidgey.converter.values;
  */
 public class FieldValues {
 	
-	private Object value;
+	private final Object value;
+
+	public FieldValues(Object value) {
+		this.value = value;
+	}
 
 	public Object getValue() {
 		return value;
-	}
-
-	public void setValue(Object value) {
-		this.value = value;
 	}
 
 	@Override

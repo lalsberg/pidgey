@@ -10,23 +10,21 @@ package br.com.pidgey.converter.values;
  */
 public class DoubleValues extends FieldValues {
 	
-	private int decimalPrecision;
-	private int size;
+	private final int decimalPrecision;
+	private final int size;
 	
+	public DoubleValues(Object value, int decimalPrecision, int size) {
+		super(value);
+		this.decimalPrecision = decimalPrecision;
+		this.size = size;
+	}
+
 	public int getDecimalPrecision() {
 		return decimalPrecision;
 	}
 	
-	public void setDecimalPrecision(int decimalPrecision) {
-		this.decimalPrecision = decimalPrecision;
-	}
-
 	public int getSize() {
 		return size;
-	}
-
-	public void setSize(int size) {
-		this.size = size;
 	}
 
 	@Override

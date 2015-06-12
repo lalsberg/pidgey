@@ -18,20 +18,18 @@ public class FieldValuesFactory {
 			validateDoubleAnnotation(doubleField);
 			int decimalPrecision = doubleField.fractionDigits();
 			
-			DoubleValues doubleValues = new DoubleValues();
-			doubleValues.setValue(value);
-			doubleValues.setDecimalPrecision(decimalPrecision);
-			doubleValues.setSize(pfield.size());
+			DoubleValues doubleValues = new DoubleValues(value, 
+					decimalPrecision, pfield.size());
 			
 			fieldValues = doubleValues;
 		} else {
-			fieldValues = new FieldValues();
-			fieldValues.setValue(value);
+			fieldValues = new FieldValues(value);
 		}
 		
 		return fieldValues;
 	}
-
+	
+	//TODO move to validator
 	private static void validateDoubleAnnotation(DoubleField doubleField) {
 		if(doubleField == null) {
 			//TODO throw exception
