@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import br.com.pidgey.annotation.DoubleField;
 import br.com.pidgey.annotation.Many;
-import br.com.pidgey.annotation.PField;
 import br.com.pidgey.exception.ParseException;
 
 public class Validator {
