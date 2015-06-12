@@ -1,12 +1,11 @@
 package br.com.pidgey.test.run;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import br.com.pidgey.exception.ParseException;
-import br.com.pidgey.parser.IParser;
 import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.ObjectWithStringAndListOfObjectsWithMandatory;
@@ -16,16 +15,10 @@ import br.com.pidgey.test.model.types.ObjectWithListOfStrings;
 
 public class ParserFromTextNullsTest {
 	
-	private IParser parser;
-	
-	@Before
-	public void setup() {
-		parser = new Parser();
-	}
-	
 	@Test
 	public void testFromTextObjectWithStringBindingNullvalueTextMustEvaluateNull() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -40,6 +33,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithStringBindingNullvalueTextMustEvaluateNull2() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -56,6 +50,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithIntegerWrapperBindingNullvalueTextMustEvaluateNull() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper();
 		ObjectWithIntegerWrapper check = Mocker.getObjectWithNullIntegerWrapper();
 		ObjectWithIntegerWrapper response = 
@@ -68,6 +63,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithIntegerPrimitiveBindingNullvalueTextMustEvaluateNull() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper();
 		ObjectWithIntegerPrimitive check = Mocker.getObjectWithNullIntegerPrimitive();
 		ObjectWithIntegerPrimitive response = 
@@ -78,6 +74,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithStringWithMandatoryBindingNullvalueTextMustBreakTheList() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatoryBindingNullvalue();
 		ObjectWithStringAndListOfObjectsWithMandatory response = 
@@ -89,6 +86,7 @@ public class ParserFromTextNullsTest {
 	@Test
 	public void testFromTextObjectWithListOfStringMustBreakTheListOnFirstNullvalue() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithListOfStringBindingNullvalueOnSecondElement();
 		ObjectWithListOfStrings response = 

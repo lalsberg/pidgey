@@ -7,11 +7,9 @@ import static org.junit.Assert.assertTrue;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import br.com.pidgey.exception.ParseException;
-import br.com.pidgey.parser.IParser;
 import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.types.ObjectWithBooleanPrimitive;
@@ -27,17 +25,11 @@ import br.com.pidgey.test.model.types.ObjectWithLongWrapper;
 
 public class ParserFromTextTypesTest {
 	
-	private IParser parser;
-	
-	@Before
-	public void setup() {
-		parser = new Parser();
-	}
-	
 	// long
 	
 	@Test
 	public void testFromTextObjectWithLongPrimitive() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithLongOrIntPrimitiveOrWrapper();
 		ObjectWithLongPrimitive responseObj = 
 				parser.fromText(ObjectWithLongPrimitive.class, response);
@@ -49,6 +41,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithLongWrapper() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithLongOrIntPrimitiveOrWrapper();
 		ObjectWithLongWrapper responseObj = 
 				parser.fromText(ObjectWithLongWrapper.class, response);
@@ -60,6 +53,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithIntegerPrimitive() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithLongOrIntPrimitiveOrWrapper();
 		ObjectWithIntegerPrimitive responseObj = 
 				parser.fromText(ObjectWithIntegerPrimitive.class, response);
@@ -71,6 +65,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithIntegerWrapper() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithLongOrIntPrimitiveOrWrapper();
 		ObjectWithIntegerWrapper responseObj = 
 				parser.fromText(ObjectWithIntegerWrapper.class, response);
@@ -82,6 +77,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithDoublePrimitive() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithDoublePrimitiveOrWrapper();
 		ObjectWithDoublePrimitive responseObj = 
 				parser.fromText(ObjectWithDoublePrimitive.class, response);
@@ -93,6 +89,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithBooleanPrimitiveTrue() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperTrue();
 		ObjectWithBooleanPrimitive responseObj = 
 				parser.fromText(ObjectWithBooleanPrimitive.class, response);
@@ -103,6 +100,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithBooleanPrimitiveFalse() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperFalse();
 		ObjectWithBooleanPrimitive responseObj = 
 				parser.fromText(ObjectWithBooleanPrimitive.class, response);
@@ -113,6 +111,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithBooleanWrapperTrue() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperTrue();
 		ObjectWithBooleanWrapper responseObj = 
 				parser.fromText(ObjectWithBooleanWrapper.class, response);
@@ -123,6 +122,7 @@ public class ParserFromTextTypesTest {
 	
 	@Test
 	public void testFromTextObjectWithBooleanWrapperFalse() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithBooleanPrimitiveOrWrapperFalse();
 		ObjectWithBooleanWrapper responseObj = 
 				parser.fromText(ObjectWithBooleanWrapper.class, response);
@@ -134,6 +134,7 @@ public class ParserFromTextTypesTest {
 	@Test
 	public void testFromTextObjectWithDate() throws ParseException, 
 			java.text.ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithDate();
 		ObjectWithDate responseObj = 
 				parser.fromText(ObjectWithDate.class, response);
@@ -149,7 +150,9 @@ public class ParserFromTextTypesTest {
 	//List<String>
 	
 	@Test
-	public void testFromTextObjectWithListOfStringsFirstElementsShouldMatch() throws ParseException {
+	public void testFromTextObjectWithListOfStringsFirstElementsShouldMatch() 
+			throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithListOfString();
 		ObjectWithListOfStrings responseObj = 
 				parser.fromText(ObjectWithListOfStrings.class, response);
@@ -161,7 +164,9 @@ public class ParserFromTextTypesTest {
 	//List<String> second element
 	
 	@Test
-	public void testFromTextObjectWithListOfStringsSecondElementsShouldMatch() throws ParseException {
+	public void testFromTextObjectWithListOfStringsSecondElementsShouldMatch() 
+			throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithListOfString();
 		ObjectWithListOfStrings responseObj = 
 				parser.fromText(ObjectWithListOfStrings.class, response);
@@ -173,7 +178,9 @@ public class ParserFromTextTypesTest {
 	//List<Integer>
 	
 	@Test
-	public void testFromTextObjectWithListOfIntegersFirstElementsShouldMatch() throws ParseException {
+	public void testFromTextObjectWithListOfIntegersFirstElementsShouldMatch() 
+			throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithListOfIntegers();
 		ObjectWithListOfIntegers responseObj = 
 				parser.fromText(ObjectWithListOfIntegers.class, response);
@@ -185,7 +192,9 @@ public class ParserFromTextTypesTest {
 	//List<Integer> second element
 	
 	@Test
-	public void testFromTextObjectWithListOfIntegersSecondElementsShouldMatch() throws ParseException {
+	public void testFromTextObjectWithListOfIntegersSecondElementsShouldMatch() 
+			throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithListOfIntegers();
 		ObjectWithListOfIntegers responseObj = 
 				parser.fromText(ObjectWithListOfIntegers.class, response);

@@ -2,11 +2,9 @@ package br.com.pidgey.test.run;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import br.com.pidgey.exception.ParseException;
-import br.com.pidgey.parser.IParser;
 import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.ObjectWithListOfObjects;
@@ -17,15 +15,9 @@ import br.com.pidgey.test.model.types.ObjectWithIntegerWrapper;
 
 public class ParserToTextNullsTest {
 	
-	private IParser parser;
-	
-	@Before
-	public void setup() {
-		parser = new Parser();
-	}
-	
 	@Test
 	public void testToTextObjectWithNullObject() throws ParseException {
+		Parser parser = new Parser();
 		ObjectWithObject request = Mocker.getObjectWithNullObject();
 		String requestStr = parser.toText(request);
 		String check = Mocker.getStringObjectWithNullObject();
@@ -33,7 +25,9 @@ public class ParserToTextNullsTest {
 	}
 	
 	@Test
-	public void testToTextObjectWithNullObjectWithoutAnything() throws ParseException {
+	public void testToTextObjectWithNullObjectWithoutAnything() 
+			throws ParseException {
+		Parser parser = new Parser();
 		ObjectWithObjectWithoutAnything request = 
 				Mocker.getObjectWithNullObjectWithoutAnything();
 		String requestStr = parser.toText(request);
@@ -43,6 +37,7 @@ public class ParserToTextNullsTest {
 	
 	@Test
 	public void testToTextObjectWithNullListOfObjects() throws ParseException {
+		Parser parser = new Parser();
 		ObjectWithListOfObjects request = Mocker.getObjectWithNullListOfObjects();
 		String requestStr = parser.toText(request);
 		String check = Mocker.getStringObjectWithNullListOfObjects();
@@ -52,7 +47,9 @@ public class ParserToTextNullsTest {
 	// int
 	
 	@Test
-	public void testToTextObjectWithIntegerPrimitiveDefaultValue() throws ParseException {
+	public void testToTextObjectWithIntegerPrimitiveDefaultValue() 
+			throws ParseException {
+		Parser parser = new Parser();
 		ObjectWithIntegerPrimitive request = Mocker.getObjectWithNullIntegerPrimitive();
 		String requestStr = parser.toText(request);
 		String check = Mocker.getRequestStringObjectWithNullLongOrIntPrimitive();
@@ -62,7 +59,9 @@ public class ParserToTextNullsTest {
 	// Integer
 
 	@Test
-	public void testToTextObjectWithIntegerWrapperNullValue() throws ParseException {
+	public void testToTextObjectWithIntegerWrapperNullValue() 
+			throws ParseException {
+		Parser parser = new Parser();
 		ObjectWithIntegerWrapper request = Mocker.getObjectWithNullIntegerWrapper();
 		String requestStr = parser.toText(request);
 		String check = Mocker.getResponseStringObjectWithNullLongOrIntPrimitiveOrWrapper();

@@ -2,11 +2,9 @@ package br.com.pidgey.test.run;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import br.com.pidgey.exception.ParseException;
-import br.com.pidgey.parser.IParser;
 import br.com.pidgey.parser.Parser;
 import br.com.pidgey.test.mock.Mocker;
 import br.com.pidgey.test.model.ObjectWithListWithoutMany2;
@@ -18,15 +16,9 @@ import br.com.pidgey.test.model.ObjectWithoutId;
 
 public class ParserFromTextTest {
 	
-	private IParser parser;
-	
-	@Before
-	public void setup() {
-		parser = new Parser();
-	}
-	
 	@Test
 	public void testFromTextObjectWithoutId() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithoutId();
 		ObjectWithoutId objectWithoutId = 
 				parser.fromText(ObjectWithoutId.class, response);
@@ -36,6 +28,7 @@ public class ParserFromTextTest {
 	
 	@Test
 	public void testFromTextObjectWithoutId2() throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithoutId();
 		ObjectWithoutId objectWithoutId = 
 				parser.fromText(ObjectWithoutId.class, response);
@@ -46,6 +39,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -59,6 +53,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId2() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -73,6 +68,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId3() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -87,6 +83,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId4() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -101,6 +98,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId5() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -115,6 +113,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId6() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -129,6 +128,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId7() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -143,6 +143,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId8() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -157,6 +158,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId9() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -171,6 +173,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId10() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -185,6 +188,7 @@ public class ParserFromTextTest {
 	@Test
 	public void testFromTextObjectWithStringAndListOfObjectsWithId11() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = Mocker.
 				getStringObjectWithStringAndListOfObjectsWithMandatory();
 		ObjectWithStringAndListOfObjectsWithMandatory check = 
@@ -198,6 +202,7 @@ public class ParserFromTextTest {
 	
 	@Test(expected = ParseException.class)
 	public void testFromTextListWithoutMany() throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = 
 				Mocker.getStringObjectWithStringAndListOfObjectsWithMandatory();
 		parser.fromText(ObjectWithListWithoutMany2.class, responseStr);
@@ -205,6 +210,7 @@ public class ParserFromTextTest {
 	
 	@Test(expected = ParseException.class)
 	public void testFromTextManyWithoutRepeated() throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = 
 				Mocker.getStringObjectWithStringAndListOfObjectsWithMandatory();
 		parser.fromText(ObjectWithManyWithoutRepeated.class, responseStr);
@@ -213,6 +219,7 @@ public class ParserFromTextTest {
 	@Test(expected = ParseException.class)
 	public void testFromTextObjectWithoutDefaultConstructor() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String responseStr = 
 				Mocker.getStringObjectWithoutDefaultConstructor();
 		parser.fromText(ObjectWithoutDefaultConstructor.class, responseStr);
@@ -221,6 +228,7 @@ public class ParserFromTextTest {
 	@Test(expected = ParseException.class)
 	public void testFromTextObjectWithUnaccessibleClass() 
 			throws ParseException {
+		Parser parser = new Parser();
 		String response = Mocker.getStringObjectWithoutId();
 		parser.fromText(ObjectWithUnaccessibleClass.class, response);
 	}

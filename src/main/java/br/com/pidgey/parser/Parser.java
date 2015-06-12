@@ -25,7 +25,7 @@ import br.com.pidgey.validation.Validator;
  * @author Coutinho
  * @author lalsberg
  */
-public class Parser implements IParser {
+public class Parser {
 	
 	public <T> T fromText(Class<T> clazz, String text) 
 			throws ParseException {
