@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import br.com.pidgey.annotation.DoubleField;
 import br.com.pidgey.annotation.PField;
+import br.com.pidgey.validation.Validator;
 
 public class FieldValuesFactory {
 	
@@ -15,7 +16,7 @@ public class FieldValuesFactory {
 			
 			PField pfield = field.getAnnotation(PField.class);
 			DoubleField doubleField = field.getAnnotation(DoubleField.class);
-			validateDoubleAnnotation(doubleField);
+			Validator.validateDoubleHasDoubleFieldAnnotation(field);
 			int decimalPrecision = doubleField.fractionDigits();
 			
 			DoubleValues doubleValues = new DoubleValues(value, 
@@ -29,11 +30,4 @@ public class FieldValuesFactory {
 		return fieldValues;
 	}
 	
-	//TODO move to validator
-	private static void validateDoubleAnnotation(DoubleField doubleField) {
-		if(doubleField == null) {
-			//TODO throw exception
-		}
-	}
-
 }
