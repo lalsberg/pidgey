@@ -45,7 +45,7 @@ public class Parser {
 	 * @param clazz the class of the object
 	 * @param sb {@link StringBuilder} to create the String
 	 */
-	private int createByClass(Class<?> clazz, StringBuilder sb, 
+	private void createByClass(Class<?> clazz, StringBuilder sb, 
 			Object instance, int listSizeSum) throws ParseException {
 		
 		Class<?> superClass = clazz.getSuperclass();
@@ -110,7 +110,6 @@ public class Parser {
 						Validator.validateStringIsNoLongerThanSize(textValue, pField.size(), field);
 						insertValue(sb, pField, textValue, position);
 					}
-					return pField.size() * listLimit;
 				} else {
 					for(int i=0; i<listLimit; i++) {
 						Object value2 = (values == null || i >= values.size()) 
@@ -121,7 +120,6 @@ public class Parser {
 				}
 			}
 		}
-		return 0;
 	}
 	
 	private void insertValue(StringBuilder sb, 

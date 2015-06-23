@@ -1,4 +1,4 @@
-package br.com.pidgey.test.run;
+package br.com.pidgey.test.functional.run;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
