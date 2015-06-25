@@ -17,9 +17,10 @@ public class PFieldSplitter {
 		
 		List<PFieldElement> elements = new ArrayList<PFieldElement>();
 		
-		//todo order first
+		
 		createByClass(instance.getClass(), instance, 0);
 		
+		//TODO order by position
 		return Collections.unmodifiableList(elements).iterator();
 	}
 	

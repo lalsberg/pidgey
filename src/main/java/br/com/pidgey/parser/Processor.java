@@ -19,7 +19,8 @@ public class Processor {
 			validator2.validate(field);
 		}
 		
-		//3- Obter uma lista de PFieldElement através da lista de Field.
+		//3- Obter uma lista ordenada de PFieldElement através da instance.
+		
 		//4- Para cada item da lista
 		//	5- Formatar
 		//	6- Appendar
