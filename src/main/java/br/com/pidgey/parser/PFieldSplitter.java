@@ -2,6 +2,8 @@ package br.com.pidgey.parser;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import br.com.pidgey.annotation.PField;
@@ -11,13 +13,14 @@ import br.com.pidgey.util.TypeUtils;
 
 public class PFieldSplitter {
 
-	public PFieldElements split(Object instance) {
+	public Iterator<PFieldElement> split(Object instance) {
 		
 		List<PFieldElement> elements = new ArrayList<PFieldElement>();
+		
 		//todo order first
 		createByClass(instance.getClass(), instance, 0);
 		
-		return null;
+		return Collections.unmodifiableList(elements).iterator();
 	}
 	
 	private void createByClass(Class<?> clazz, Object instance, 
