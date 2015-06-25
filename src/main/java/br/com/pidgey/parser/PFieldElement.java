@@ -1,12 +1,12 @@
 package br.com.pidgey.parser;
 
-public class AppendableItem {
+public class PFieldElement {
 	
 	private final int startPosition;
 	private final int endPosition;
 	private final Object value;
 
-	public AppendableItem(int startPosition, int endPosition, 
+	public PFieldElement(int startPosition, int endPosition, 
 			Object value) {
 		super();
 		this.startPosition = startPosition;
@@ -28,7 +28,7 @@ public class AppendableItem {
 
 	@Override
 	public String toString() {
-		return "AppendableItem [startPosition=" + startPosition
+		return "PFieldElement [startPosition=" + startPosition
 				+ ", endPosition=" + endPosition + ", value=" + value + "]";
 	}
 

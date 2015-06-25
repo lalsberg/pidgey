@@ -7,16 +7,16 @@ import java.util.List;
 //Essa classe existe pois o java nao fornece um "unmodifiable iterator" 
 //e eu quero permitir que os clientes apenas iterem, por isso nao retorno 
 //uma unmodifiable list.
-public class Appendables implements Iterable<AppendableItem>{
+public class PFieldElements implements Iterable<PFieldElement>{
 	
-	private final List<AppendableItem> items;
+	private final List<PFieldElement> elements;
 
-	public Appendables(List<AppendableItem> items) {
-		this.items = Collections.unmodifiableList(items);
+	public PFieldElements(List<PFieldElement> elements) {
+		this.elements = Collections.unmodifiableList(elements);
 	}
 
-	public Iterator<AppendableItem> iterator() {
-		return items.iterator();
+	public Iterator<PFieldElement> iterator() {
+		return elements.iterator();
 	}
 
 }
