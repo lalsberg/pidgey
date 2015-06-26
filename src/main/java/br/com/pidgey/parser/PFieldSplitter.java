@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import br.com.pidgey.annotation.Many;
 import br.com.pidgey.annotation.PField;
 import br.com.pidgey.util.ReflectionUtils;
 import br.com.pidgey.util.TypeUtils;
+import br.com.pidgey.validation.Validator;
 
 
 public class PFieldSplitter {
@@ -47,24 +49,26 @@ public class PFieldSplitter {
 			if(!List.class.isAssignableFrom(field.getType())) {
 				if(TypeUtils.isJavaType(field.getType())) {
 					int position = pField.position() + listSizeSum;
-					
+					int endPosition = position + pField.size();
+					PFieldElement element = new PFieldElement(position, endPosition, value);
 				} else {
 					createByClass(field.getType(), value,listSizeSum);
 				}
 			} else {
 				Class<?> listGenericType = ReflectionUtils.getFirstGenericType(field);
 				
-				@SuppressWarnings("unchecked")
-				List<Object> values = (List<Object>) value;
+				int repeated = field.getAnnotation(Many.class).repeated();
 				
 				if(TypeUtils.isJavaType(listGenericType)) {
-					for(int i=0; i<values.size(); i++) {
-						int position = pField.position() + (pField.size() * i) + listSizeSum;
-						Object value2 = (values == null || i >= values.size()) 
-								? null : values.get(i);
-						
-					}
+					ListOfJavaTypeSplitter listOfJavaTypeSplitter = new ListOfJavaTypeSplitter();
+					List<PFieldElement> elements = listOfJavaTypeSplitter.split(
+							value, listSizeSum, pField.size(), pField.position(), repeated);
+					
+					
 				} else {
+					@SuppressWarnings("unchecked")
+					List<Object> values = (List<Object>) value;
+					
 					for(int i=0; i<values.size(); i++) {
 						Object value2 = (values == null || i >= values.size()) 
 								? null : values.get(i);
